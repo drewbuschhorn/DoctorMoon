@@ -80,11 +80,20 @@
     </p>
     -->
 
-    <p>You can also clone the project <!-- >with <a href="http://git-scm.com">Git</a> -->
+    <p>You can also clone the project <!-- with <a href="http://git-scm.com">Git</a> -->
       by running:
 <pre>hg clone https://drewbuschhorn@bitbucket.org/drewbuschhorn/publication_timeline
 cd publication_timeline
 hg checkout tip
+</pre>
+    </p>
+    
+    <p>Having checked out publication_timeline aspect of DoctorMoon, you can run changeset 46 with local graphing by
+    the following set of commands: (producing an image like the above)
+<pre>hg clone https://drewbuschhorn@bitbucket.org/drewbuschhorn/publication_timeline
+cd publication_timeline/src
+hg checkout 46
+PYTHONPATH="/home/dbuschho/workspace/publication_timeline/libs/networkx" python main.py
 </pre>
     </p>
 
