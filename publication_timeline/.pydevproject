@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?eclipse-pydev version="1.0"?>
+
+<pydev_project>
+<pydev_property name="org.python.pydev.PYTHON_PROJECT_INTERPRETER">Default</pydev_property>
+<pydev_property name="org.python.pydev.PYTHON_PROJECT_VERSION">python 2.7</pydev_property>
+<pydev_pathproperty name="org.python.pydev.PROJECT_SOURCE_PATH">
+<path>/publication_timeline/src</path>
+<path>/publication_timeline/src/timeline_generator</path>
+</pydev_pathproperty>
+<pydev_pathproperty name="org.python.pydev.PROJECT_EXTERNAL_SOURCE_PATH">
+<path>/usr/local/lib/python2.6/dist-packages/lxml-2.3-py2.6-linux-i686.egg</path>
+<path>/usr/local/lib/python2.6/dist-packages/feedparser-5.0.1-py2.6.egg</path>
+<path>/usr/local/lib/python2.6/dist-packages/pygraphviz-1.1-py2.6-linux-i686.egg</path>
+<path>/usr/share/pyshared/matplotlib-0.99.3-nspkg.pth</path>
+<path>/home/dbuschho/workspace/publication_timeline/libs/networkx</path>
+</pydev_pathproperty>
+</pydev_project>

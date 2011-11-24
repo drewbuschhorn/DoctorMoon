@@ -1,0 +1,19 @@
+Metadata-Version: 1.1
+Name: sunburnt
+Version: 0.5
+Summary: Python interface to Solr
+Home-page: UNKNOWN
+Author: Toby White
+Author-email: toby@timetric.com
+License: WTFPL
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: DFSG approved
+Classifier: Programming Language :: Python
+Classifier: Topic :: Internet :: WWW/HTTP :: Indexing/Search
+Classifier: Topic :: Software Development :: Libraries
+Requires: httplib2
+Requires: lxml
+Requires: pytz

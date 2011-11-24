@@ -1,0 +1,48 @@
+{% extends "admin/base_site.html" %}
+
+{% load url from future %}
+{% load i18n %}
+
+{% block extrastyle %}{% load adminmedia %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/login.css" />{% endblock %}
+
+{% block branding %}
+<br /><br />
+<h1 id="site-name">{% trans 'Doctor Moon: Create an account' %}</h1>
+{% endblock %}
+
+{% block title %}Create an account{% endblock %}
+
+{% block content %}
+    
+    <div id="header">
+    {% if user.is_active %}
+        <div id="user-tools">
+            {% trans 'Welcome,' %}
+            <strong>{% filter force_escape %}{% firstof user.first_name user.username %}{% endfilter %}</strong>.
+            {% block userlinks %}
+                    <a href="/accounts/logout/">
+                {% trans 'Log out' %}</a>
+            {% endblock %}
+        </div>
+        {% endif %}
+        {% block nav-global %}{% endblock %}
+    </div>
+    <!-- END Header -->
+        {% if messages %}
+        <ul class="messagelist">{% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+	{% endfor %}</ul>
+        {% endif %} 
+
+
+
+  <h1>Create an account</h1>
+
+  <form action="" method="post">
+      {% csrf_token %}
+      <table>
+      {{ form.as_table }}
+      </table>
+      <input type="submit" value="Create the account">
+  </form>
+{% endblock %}

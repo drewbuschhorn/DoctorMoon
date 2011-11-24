@@ -1,0 +1,106 @@
+{
+  "nodes": [
+    {
+      "group": 0, 
+      "name": "10.1371/journal.pmed.1000420"
+    }, 
+    {
+      "group": 0, 
+      "name": "10.1371/journal.pone.0018362"
+    }, 
+    {
+      "group": 0, 
+      "name": "10.1371/journal.pmed.0040215"
+    }, 
+    {
+      "group": 0, 
+      "name": "10.1371/journal.pmed.0040296"
+    }, 
+    {
+      "group": 0, 
+      "name": "10.1371/journal.pone.0004607"
+    }, 
+    {
+      "group": 0, 
+      "name": "10.1371/journal.pmed.0040297"
+    }, 
+    {
+      "group": 0, 
+      "name": "10.1371/journal.pmed.0040028"
+    }, 
+    {
+      "group": 0, 
+      "name": "10.1371/journal.pmed.1000022"
+    }, 
+    {
+      "group": 0, 
+      "name": "10.1371/journal.pmed.0040168"
+    }, 
+    {
+      "group": 0, 
+      "name": "10.1371/journal.pmed.0020124"
+    }
+  ], 
+  "links": [
+    {
+      "source": 0, 
+      "target": 3, 
+      "value": 1
+    }, 
+    {
+      "source": 0, 
+      "target": 5, 
+      "value": 1
+    }, 
+    {
+      "source": 1, 
+      "target": 9, 
+      "value": 1
+    }, 
+    {
+      "source": 1, 
+      "target": 4, 
+      "value": 1
+    }, 
+    {
+      "source": 2, 
+      "target": 8, 
+      "value": 1
+    }, 
+    {
+      "source": 2, 
+      "target": 9, 
+      "value": 1
+    }, 
+    {
+      "source": 3, 
+      "target": 5, 
+      "value": 1
+    }, 
+    {
+      "source": 4, 
+      "target": 9, 
+      "value": 1
+    }, 
+    {
+      "source": 5, 
+      "target": 6, 
+      "value": 1
+    }, 
+    {
+      "source": 5, 
+      "target": 7, 
+      "value": 1
+    }, 
+    {
+      "source": 6, 
+      "target": 9, 
+      "value": 1
+    }, 
+    {
+      "source": 8, 
+      "target": 9, 
+      "value": 1
+    }
+  ]
+}
