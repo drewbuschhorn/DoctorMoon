@@ -61,9 +61,21 @@ def write_d3_js(G, path, group=None, encoding="utf-8"):
 	graph_json = d3_json(G, group)
 	graph_dump = json.dumps(graph_json, indent=2)
 	fh.write(graph_dump.encode(encoding))
-	
 
-def d3_json(G, group=None):
+def _doc_to_json(searcher,node_labels,node):
+	node = node_labels[node][1]
+	
+	return 	{	
+			'name': "%s::%s::%s::%d" %(node.path_index,node.publication_date.absdate,node.id,node.hasMatchingAuthorsName(searcher.core_authors())), 
+			'group' : 0,
+			'doi': node.id,
+			'publication_date': node.publication_date.absdate,
+			'path_index': node.path_index,
+			'is_original_author': int(node.hasMatchingAuthorsName(searcher.core_authors()),),
+			'title': node.title
+			}
+
+def d3_json(G, group=None, searcher = None):
 	"""Converts a NetworkX Graph to a properly D3.js JSON formatted dictionary
 	
 	Parameters
@@ -97,7 +109,10 @@ def d3_json(G, group=None):
 	
 	# Build up node dictionary in JSON format
 	if group is None:
-		graph_json = {'nodes': map(lambda n: {'name': str(node_labels[n][1]), 'group' : 0}, xrange(len(node_labels)))}
+		graph_json = 	{'nodes': 
+							map(lambda n : _doc_to_json(searcher,node_labels,n), xrange(len(node_labels))
+							)
+						}
 	else:
 		try:
 			graph_json = {'nodes' : map(lambda n: {'name': str(node_labels[n][1]), 'group' : graph_nodes[n][1][group]}, xrange(len(node_labels)))}
