@@ -8,6 +8,8 @@ import AbstractGenerator
 
 import sunburnt,httplib2
 
+from twisted.internet import defer, reactor
+
 #####Plos<>Sunburnt Helper Class
 class PlosInterface(sunburnt.SolrInterface):
     def __init__(self,api_key):
@@ -25,7 +27,8 @@ class PlosInterface(sunburnt.SolrInterface):
         api_key = None
         def __init__(self, url, api_key,cacheLength=0):
             self.api_key = api_key
-            h = PlosInterface.PlosCachingHTTP(cache="/var/tmp/plos_cache")
+            #h = PlosInterface.PlosCachingHTTP(cache="/var/tmp/plos_cache")
+            h = PlosInterface.PlosCachingHTTP()
             h._cacheLength = cacheLength
             super(PlosInterface.PlosConnection, self).__init__(url=url,http_connection=h)
         def select(self, params):
@@ -45,6 +48,7 @@ class PlosInterface(sunburnt.SolrInterface):
 
 
 import uuid,datetime,time,string
+from twisted.internet import reactor, threads, defer
 
 class PlosGenerator(AbstractGenerator.AbstractGenerator):
 
@@ -59,7 +63,6 @@ class PlosGenerator(AbstractGenerator.AbstractGenerator):
         Constructor
         '''
         self.api_key = api_key
-        self.search = PlosInterface(api_key)
         self.uuid = uuid.uuid4()
         self.results = {}
                 
@@ -67,15 +70,35 @@ class PlosGenerator(AbstractGenerator.AbstractGenerator):
         return PlosDocument(owningGenerator=self,**keywords)
     
     def _PlosDocumentHash(self,_plosDoc):
-        return {string.strip(_plosDoc.id):_plosDoc}           
-                
-    def populateNodeFromCustomId(self,customId):
+        return {string.strip(_plosDoc.id):_plosDoc}
+    
+    @defer.inlineCallbacks                
+    def populateNodeFromCustomId(self,customId,tries=0):
         if(customId in self.results):
-            return self.results[customId]
+            defer.returnValue(self.results[customId])
         
-        response = self.search.query(id=customId).field_limit(self.fields).execute(constructor=self._PlosDocumentConstructor)
+        search = PlosInterface(self.api_key)
+        q = search.query(id=customId).field_limit(self.fields)
+        
+        try:
+            
+            d = threads.deferToThread(q.execute,constructor=self._PlosDocumentConstructor)
+            d.addErrback(self._handleSearchTimeout)
+            reactor.callLater(5,d.cancel)
+            response = yield d
+
+        except Exception as inst:
+            
+            print "failure on populateNodeFromCustomId %s, try %s" % (customId,tries)
+            if(tries < 2):
+                result = yield self.populateNodeFromCustomId(customId, tries+1)
+                defer.returnValue(result)
+            else:
+                print tries
+                raise NameError("Couldn't complete populateNodeFromCustomId")
+        
         if len(response.result.docs) != 1:
-            raise NameError('PlosSearch results on customId returned: %s results' % len(response.result.docs))
+            raise NameError('PlosSearch results on customId returned: %s results' % (len(response.result.docs),) )
         
         result = response.result.docs[0]
         if result.id not in self.results:
@@ -83,18 +106,45 @@ class PlosGenerator(AbstractGenerator.AbstractGenerator):
             self.results.update(result_hash) 
         
         result = self.results.get(result.id)
-               
-        return result
+        defer.returnValue(result)
 
-    def findCitingNodes(self,_plosDoc):
-        authornames = self.search.Q()
+    def _handleSearchTimeout(self,e):
+        raise NameError("Search timed out, %s" %(e.getErrorMessage,))
+
+    @defer.inlineCallbacks
+    def findCitingNodes(self,_plosDoc,tries = 0):
+        search = PlosInterface(self.api_key)
+        authornames = search.Q()
         for fullname in _plosDoc.getNodeAuthorsArray():
-            authornames = authornames | self.search.Q(reference=string.split(fullname,' ')[-1]) 
+            authornames = authornames | search.Q(reference=string.split(fullname,' ')[-1]) 
         
-        query = self.search.query(self.search.Q(reference=_plosDoc.getNodeTitle()) & authornames)
-        response = query.field_limit(self.fields).execute(constructor=self._PlosDocumentConstructor)
+        query = search.query(search.Q(reference=_plosDoc.getNodeTitle()) & authornames).field_limit(self.fields)
+        
+        try:
+        
+            d = threads.deferToThread(query.execute,constructor=self._PlosDocumentConstructor)
+            d.addErrback(self._handleSearchTimeout,_plosDoc=_plosDoc)
+            reactor.callLater(10,d.cancel)
+            response = yield d
+        
+        except Exception as inst:
+
+            print "failure on findCitingNodes %s, try %s" % (_plosDoc,tries)
+            if(tries < 2):
+                try:
+                    results = yield self.findCitingNodes(_plosDoc, tries+1)
+                    defer.returnValue(results)
+                except Exception as inst:
+                    print 'internal exception'
+                    raise inst
+            else:
+                print tries
+                raise NameError("Couldn't complete findCitingNodes") 
         
         results = []
+        if(response is None):
+            defer.returnValue(results)
+            
         for result in response.result.docs:
             if result.id not in self.results:
                 self.results.update(self._PlosDocumentHash(result))
@@ -105,8 +155,7 @@ class PlosGenerator(AbstractGenerator.AbstractGenerator):
             _plosDoc.addChildNode(result)
             results.append(result)
     
-        return results
-        
+        defer.returnValue(results)
 
             
 class PlosDocument(object):  #Maybe switch to proxy object and duck-type
