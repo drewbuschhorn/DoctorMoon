@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+{% set title = 'Overview' %}
+{% block body %}
+
+
+<h2>High productivity software for complex networks</a></h2>
+
+<blockquote>
+<p>NetworkX is a Python package for the creation, manipulation, and
+study of the structure, dynamics, and functions of complex networks.</p>
+</blockquote>
+
+<h2>Quick Example</h2>
+
+
+
+<table align="center" style="margin-left: 20px"><tr>
+    <td width="50%">
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span><span class="o">=</span><span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s">&quot;spam&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span class="p"><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">())</span>
+<span class="go">[1, 2, &#39;spam&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span class="p"><span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">())</span>
+<span class="go">[(1, 2)]</span>
+</pre></div>
+    </td>
+    <td width="50%">
+<img align="right" src="{{ pathto("_static/art1.png", 1) }}" alt="NetworkX art" />
+</td></tr>
+</blockquote>
+</table>
+
+
+<h2>Documentation</h2>
+
+<table class="contentstable" align="center" style="margin-left: 30px"><tr>
+  <td width="50%">
+
+    <p class="biglink"><a class="biglink" href="{{ pathto("tutorial/index") }}">Tutorial</a><br/>
+       <span class="linkdescr">start here</span></p>
+    <p class="biglink"><a class="biglink" href="{{ pathto("reference/index") }}">Reference</a><br/>
+       <span class="linkdescr">guide to all functions and classes</span></p>
+    <p class="biglink"><a class="biglink" href="{{ pathto("examples/index") }}">Examples</a><br/>
+       <span class="linkdescr">using the library</span></p>
+    <p class="biglink"><a class="biglink" href="{{ pathto("gallery") }}">Gallery</a><br/>
+       <span class="linkdescr">network drawings</span></p>
+  </td>
+  <td width="50%">
+    <p class="biglink"><a class="biglink" href="{{ pathto("contents") }}">Contents</a><br/>
+       <span class="linkdescr">a complete overview</span></p>
+    <p class="biglink"><a class="biglink" href="{{ pathto("search") }}">Search Page</a><br/>
+       <span class="linkdescr">search the documentation</span></p>
+    <p class="biglink"><a class="biglink" href="{{ pathto("genindex") }}">General Index</a><br/>
+       <span class="linkdescr">all functions, classes, terms</span></p>
+    <p class="biglink"><a class="biglink" href="{{ pathto("modindex") }}">Module Index</a><br/>
+       <span class="linkdescr">quick access to all documented modules</span></p>
+  </td></tr>
+</table>
+
+<h2>Features</h2>
+<ul class="simple">
+<li> Standard graph-theoretic and statistical physics functions</li>
+<li>Easy exchange of network algorithms between applications,
+disciplines, and platforms</li>
+<li> Many classic graphs and synthetic networks</li>
+<li> Nodes and edges can be &quot;anything&quot;
+(e.g. time-series, text, images, XML records)</li>
+
+<li>Exploits existing code from high-quality legacy software in C,
+C++, Fortran, etc.</li>
+<li>Open source   <a href="reference/legal.html">BSD license</a> </li>
+<li>More than 1000 unit tests</li>
+</ul>
+
+<p><em>Additional benefits from Python</em></p>
+
+<ul class="simple">
+<li>Fast prototyping of new algorithms</li>
+<li>Easy to teach</li>
+<li>Multi-platform</li>
+
+<li>Allows easy access to almost any database</li>
+</ul>
+
+
+{% endblock %}
