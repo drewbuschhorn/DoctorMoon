@@ -14,7 +14,7 @@ from twisted.internet import defer, reactor
 class PlosInterface(sunburnt.SolrInterface):
     def __init__(self,api_key):
         plos_url = "http://api.plos.org/search"
-        plos_schema = open('timeline_generator/generators/plos_schema.xml')#localfile handle open('../plos_schema.xml') from
+        plos_schema = open('publication_timeline/src/timeline_generator/generators/plos_schema.xml')#localfile handle open('../plos_schema.xml') from
                                                 #http://api.plos.org/search-examples/schema.xml
         #Python base class magic ... make this class a SolrInterface like object
         #note that schemadoc if requested by url will be loaded                                      
