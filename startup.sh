@@ -6,6 +6,6 @@ if [ $? -ne 0 ]; then
   exit
 fi
 
-screen -d -m -S drmoon_django python drmoon_project/manage.py runserver
+screen -d -m -S drmoon_django ./django_startup.sh
 screen -d -m -S drmoon_twisted ./twisted_startup.sh
 screen -ls
