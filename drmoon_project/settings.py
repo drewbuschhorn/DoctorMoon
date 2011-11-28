@@ -120,7 +120,9 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'drmoon'
+    'drmoon',
+    'tastypie' #API Provider - v0.9.9
+    #http://readthedocs.org/docs/django-tastypie/en/v0.9.9/tutorial.html
 )
 
 # A sample logging configuration. The only tangible logging
