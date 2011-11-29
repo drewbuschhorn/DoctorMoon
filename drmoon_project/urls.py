@@ -5,6 +5,9 @@ from django.conf import settings
 from django.contrib import admin
 admin.autodiscover()
 
+from drmoon.api import NetworkGraphResource
+networkgraph_resource = NetworkGraphResource()
+
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'drmoon_project.views.home', name='home'),
@@ -24,7 +27,8 @@ urlpatterns = patterns('',
     url(r'^networkgraphs/index$', 'drmoon.networkgraph_views.index'),
     url(r'^networkgraphs/form$', 'drmoon.networkgraph_views.form'),
     url(r'^networkgraphs/detail/(?P<network_id>\d+)/$', 'drmoon.networkgraph_views.details'),
-    url(r'^networkgraphs/data/(?P<network_id>\d+)/$', 'drmoon.networkgraph_views.data')
+    url(r'^networkgraphs/data/(?P<network_id>\d+)/$', 'drmoon.networkgraph_views.data'),
+    url(r'^api/',include(networkgraph_resource.urls))
 )
 
 if settings.DEBUG:

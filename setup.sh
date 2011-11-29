@@ -9,7 +9,7 @@
 #cd DoctorMoon
 
 #### Easy dependencies
-../bin/easy_install django psycopg2 #Doctor Moon ( django site ) dependencies
+../bin/easy_install django psycopg2 mimeparse python_digest #Doctor Moon ( django site ) dependencies
 ../bin/easy_install twisted psycopg2
 ../bin/easy_install sunburnt httplib2 lxml #Doctor Moon ( twisted site ) dependencies 
 ####
