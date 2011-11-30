@@ -5,8 +5,12 @@ from django.conf import settings
 from django.contrib import admin
 admin.autodiscover()
 
-from drmoon.api import NetworkGraphResource
-networkgraph_resource = NetworkGraphResource()
+from tastypie.api import Api
+from drmoon.api import NetworkGraphResource, UserProfileResource,UserResource
+v1_api = Api(api_name='v1')
+v1_api.register(UserResource())
+v1_api.register(NetworkGraphResource())
+v1_api.register(UserProfileResource())
 
 urlpatterns = patterns('',
     # Examples:
@@ -28,7 +32,7 @@ urlpatterns = patterns('',
     url(r'^networkgraphs/form$', 'drmoon.networkgraph_views.form'),
     url(r'^networkgraphs/detail/(?P<network_id>\d+)/$', 'drmoon.networkgraph_views.details'),
     url(r'^networkgraphs/data/(?P<network_id>\d+)/$', 'drmoon.networkgraph_views.data'),
-    url(r'^api/',include(networkgraph_resource.urls))
+    url(r'^api/',include(v1_api.urls))
 )
 
 if settings.DEBUG:
