@@ -37,8 +37,15 @@ sudo apt-get install libpq-dev python-dev
 # ( database name = drmoon, username="postgres", password="django13" )
 
 #cd drmoon_project/
+## create drmoon database in postgres
+## edit settings.py to provide postgres login data 
 #../../bin/python manage.py syncdb
 # provide superuser
+
+#cd ..
+#sudo apt-get install screen
+## Startup the drmoon and cal servers
+#./startup.sh
 
 #http://localhost:8000/accounts/register
 # provide test user
@@ -46,3 +53,6 @@ sudo apt-get install libpq-dev python-dev
 #http://localhost:8000/accounts/login
 #http://localhost:8000/networkgraphs/form
 # doi:[10.1371/journal.pmed.0020124]
+
+## shutdown servers when finished
+#./shutdown.sh
