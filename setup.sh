@@ -25,9 +25,10 @@ sudo apt-get install libpq-dev python-dev
 
 #### Challenging dependencies
 ../bin/easy_install egenix-mx-base
-##apt-get install libgraphviz-dev
+#apt-get install libgraphviz-dev
 ../bin/easy_install pygraphviz 
-../bin/easy_install numpy 
+../bin/easy_install numpy
+#apt-get install libfreetype6-dev libpng12-dev
 ../bin/easy_install matplotlib #Doctor Moon ( twisted site ) dependencies
 ####
 
