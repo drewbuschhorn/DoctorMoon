@@ -5,6 +5,8 @@ sudo apt-get install postgresql postgresql-client
 #sudo -u postgres psql postgres
 ##set password
 #\password postgres
+sudo apt-get install libpq-dev python-dev
+
 
 #sudo easy_install virtualenv
 #virtualenv my_doctormoon --no-site-packages
