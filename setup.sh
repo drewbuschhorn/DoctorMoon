@@ -19,6 +19,7 @@ sudo apt-get install libpq-dev python-dev
 #### Easy dependencies
 ../bin/easy_install django psycopg2 mimeparse python_digest #Doctor Moon ( django site ) dependencies
 ../bin/easy_install twisted psycopg2
+#sudo apt-get install libxml2 libxml2-dev libxslt-dev 
 ../bin/easy_install sunburnt httplib2 lxml #Doctor Moon ( twisted site ) dependencies 
 ####
 
