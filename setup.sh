@@ -1,5 +1,11 @@
 #!/bin/bash
 
+#Setup postgres
+sudo apt-get install postgresql postgresql-client
+#sudo -u postgres psql postgres
+##set password
+#\password postgres
+
 #sudo easy_install virtualenv
 #virtualenv my_doctormoon --no-site-packages
 #cd my_doctormoon
