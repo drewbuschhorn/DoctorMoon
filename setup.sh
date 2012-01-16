@@ -1,5 +1,13 @@
 #!/bin/bash
 
+#Setup postgres
+sudo apt-get install postgresql postgresql-client
+#sudo -u postgres psql postgres
+##set password
+#\password postgres
+sudo apt-get install libpq-dev python-dev
+
+
 #sudo easy_install virtualenv
 #virtualenv my_doctormoon --no-site-packages
 #cd my_doctormoon
@@ -11,14 +19,16 @@
 #### Easy dependencies
 ../bin/easy_install django psycopg2 mimeparse python_digest #Doctor Moon ( django site ) dependencies
 ../bin/easy_install twisted psycopg2
+#sudo apt-get install libxml2 libxml2-dev libxslt-dev 
 ../bin/easy_install sunburnt httplib2 lxml #Doctor Moon ( twisted site ) dependencies 
 ####
 
 #### Challenging dependencies
 ../bin/easy_install egenix-mx-base
-##apt-get install libgraphviz-dev
+#apt-get install libgraphviz-dev pkg-config
 ../bin/easy_install pygraphviz 
-../bin/easy_install numpy 
+../bin/easy_install numpy
+#apt-get install libfreetype6-dev libpng12-dev
 ../bin/easy_install matplotlib #Doctor Moon ( twisted site ) dependencies
 ####
 
@@ -27,8 +37,15 @@
 # ( database name = drmoon, username="postgres", password="django13" )
 
 #cd drmoon_project/
+## create drmoon database in postgres
+## edit settings.py to provide postgres login data 
 #../../bin/python manage.py syncdb
 # provide superuser
+
+#cd ..
+#sudo apt-get install screen
+## Startup the drmoon and cal servers
+#./startup.sh
 
 #http://localhost:8000/accounts/register
 # provide test user
@@ -36,3 +53,6 @@
 #http://localhost:8000/accounts/login
 #http://localhost:8000/networkgraphs/form
 # doi:[10.1371/journal.pmed.0020124]
+
+## shutdown servers when finished
+#./shutdown.sh
