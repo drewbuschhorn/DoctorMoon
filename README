@@ -2,15 +2,14 @@ requires:
 
 Grapher:
 	NetworkX - http://networkx.lanl.gov/install.html
-		pygraphviz - easy_install
-			libgraphviz-dev - apt-get install libgraphviz-dev
-		numpy - easy_install
-		matplotlib - easy_install
+		pygraphviz - pip install
+		numpy - pip install
+		matplotlib - pip install
 
 PlosGenerator:
 	sunburnt - http://packages.python.org/sunburnt/installation.html:
-		httplib2 - http://code.google.com/p/httplib2/wiki/Install
-		lxml - http://lxml.de/ , "sudo easy_install lxml"
+		httplib2 - pip install #http://code.google.com/p/httplib2/wiki/Install
+		lxml - pip install #http://lxml.de/
 
 ArxivGenerator:
-	feedparser - "sudo easy_install feedparser"
+	feedparser - pip install
