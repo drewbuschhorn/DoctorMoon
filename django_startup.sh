@@ -1,3 +1,3 @@
 #!/bin/bash
 
-../bin/python drmoon_project/manage.py runserver
+python drmoon_project/manage.py runserver

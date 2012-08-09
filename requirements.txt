@@ -1,3 +1,5 @@
+Django==1.4.1
+Twisted==12.1.0
 argparse==1.2.1
 distribute==0.6.27
 feedparser==5.1.2
@@ -5,5 +7,8 @@ httplib2==0.7.4
 lxml==2.3.5
 matplotlib==1.1.0
 numpy==1.6.2
+psycopg2==2.4.5
 pygraphviz==1.1
+sunburnt==0.6
 wsgiref==0.1.2
+zope.interface==4.0.1

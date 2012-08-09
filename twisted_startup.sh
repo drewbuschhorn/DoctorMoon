@@ -1,3 +1,3 @@
 #!/bin/bash
 
-PYTHONPATH="publication_timeline/libs/networkx" ../bin/python publication_timeline/src/main.py
+PYTHONPATH="publication_timeline/libs/networkx" python publication_timeline/src/main.py
