@@ -1,4 +1,5 @@
 #!/bin/bash
+sudo apt-get install python-dev libfreetype6-dev libpng-dev libxslt-dev libxml2-dev libpq-dev postgresql
 
 #sudo easy_install virtualenv
 #virtualenv my_doctormoon --no-site-packages
@@ -8,18 +9,8 @@
 #git clone git@github.com:drewbuschhorn/DoctorMoon.git
 #cd DoctorMoon
 
-#### Easy dependencies
-../bin/easy_install django psycopg2 #Doctor Moon ( django site ) dependencies
-../bin/easy_install twisted psycopg2
-../bin/easy_install sunburnt httplib2 lxml #Doctor Moon ( twisted site ) dependencies 
-####
-
-#### Challenging dependencies
-../bin/easy_install egenix-mx-base
-##apt-get install libgraphviz-dev
-../bin/easy_install pygraphviz 
-../bin/easy_install numpy 
-../bin/easy_install matplotlib #Doctor Moon ( twisted site ) dependencies
+pip install numpy
+pip install -r requirements.txt
 ####
 
 
