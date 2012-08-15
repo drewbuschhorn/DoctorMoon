@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo apt-get install python-dev libfreetype6-dev libpng-dev libxslt-dev libxml2-dev libpq-dev postgresql python-pip python-dev build-essential 
+sudo apt-get install python-dev libfreetype6-dev libpng-dev libxslt-dev libxml2-dev libpq-dev postgresql python-pip python-dev build-essential libgraphviz-dev screen
 sudo pip install --upgrade pip 
 sudo pip install --upgrade virtualenv 
 
