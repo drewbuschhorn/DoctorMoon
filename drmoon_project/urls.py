@@ -1,3 +1,5 @@
+import os
+
 from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 
@@ -29,5 +31,5 @@ urlpatterns = patterns('',
 
 if settings.DEBUG:
     urlpatterns += patterns('',
-        (r'^files/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/home/dbuschho/Desktop/drmoon_project/drmoon/files'}),
+        (r'^files/(?P<path>.*)$', 'django.views.static.serve', {'document_root': os.path.join(settings.SITE_ROOT,'drmoon','files')}),
     )

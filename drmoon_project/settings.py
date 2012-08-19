@@ -1,3 +1,10 @@
+import os
+import django
+# calculated paths for django and the site
+# used as starting points for various other paths
+DJANGO_ROOT = os.path.dirname(os.path.realpath(django.__file__))
+SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
+
 # Django settings for drmoon_project project.
 
 DEBUG = True
@@ -106,7 +113,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-	"/home/dbuschho/Desktop/drmoon_project/drmoon/templates"
+	os.path.join(DJANGO_ROOT,'templates')
 )
 
 INSTALLED_APPS = (

@@ -17,20 +17,21 @@ class PlosInterface(sunburnt.SolrInterface):
         plos_schema = open('publication_timeline/src/timeline_generator/generators/plos_schema.xml')#localfile handle open('../plos_schema.xml') from
                                                 #http://api.plos.org/search-examples/schema.xml
         #Python base class magic ... make this class a SolrInterface like object
-        #note that schemadoc if requested by url will be loaded                                      
+        #note that schemadoc if requested by url will be loaded                                    
         super(PlosInterface, self).__init__(url=plos_url,schemadoc=plos_schema)
         #Replace default connection with one that 
-        self.conn = PlosInterface.PlosConnection(url=plos_url,api_key=api_key,cacheLength=31536000)    
+        self.conn = PlosInterface.PlosConnection(url=plos_url,api_key=api_key,cacheLength=31536000) 
     #Create specific PlosConnection subclass of SolrConnection
     #to force addition of API_KEY query param to all queries
     class PlosConnection(sunburnt.sunburnt.SolrConnection):
         api_key = None
         def __init__(self, url, api_key,cacheLength=0):
             self.api_key = api_key
-            #h = PlosInterface.PlosCachingHTTP(cache="/var/tmp/plos_cache")
-            h = PlosInterface.PlosCachingHTTP()
+            h = PlosInterface.PlosCachingHTTP(cache="/var/tmp/plos_cache")
+            #h = PlosInterface.PlosCachingHTTP()
             h._cacheLength = cacheLength
-            super(PlosInterface.PlosConnection, self).__init__(url=url,http_connection=h)
+	    #Keep this
+            super(PlosInterface.PlosConnection, self).__init__(url=url,http_connection=h,retry_timeout=-1,max_length_get_url=32264)
         def select(self, params):
             params.append((u'api_key',self.api_key))
             return sunburnt.sunburnt.SolrConnection.select(self,params)
