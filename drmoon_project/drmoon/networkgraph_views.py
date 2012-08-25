@@ -47,7 +47,7 @@ def details(request, network_id):
 @login_required
 def form(request):
     return render_to_response('networkgraph/form.html',
-	{'user_key':UserProfile.objects.get_or_create(user=request.user)[0].request_code}
+	{'user_key':UserProfile.objects.get_or_create(user=request.user)[0].request_code,'url':request.get_host().split(':')[0]}
     )
 
 @login_required

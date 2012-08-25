@@ -40,7 +40,7 @@
 $('form').submit(function(){
   $.ajax({
     type: "POST",
-    url: "http://localhost:8880/form",
+    url: "http://{{ url  }}:8880/form",
     data: $('form').serialize(),
     dataType: "json",
     success: function(data) {
