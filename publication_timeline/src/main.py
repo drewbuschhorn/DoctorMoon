@@ -92,8 +92,9 @@ if __name__ == '__main__':
     
     
         def _send(self,result,params):
-            self.send("Run finished","Run finished", "dbuschho@localhost",[params['dbResult'][0][1]])
-    
+            #self.send("Run finished","Run finished", "dbuschho@localhost",[params['dbResult'][0][1]])
+    	    pass
+
         def send(self,message=None, subject=None, sender=None, recipients=None, host=None):
             """
             Send email to one or more addresses.
@@ -148,8 +149,8 @@ if __name__ == '__main__':
             dbpool = adbapi.ConnectionPool("psycopg2", 
                             database='drmoon', user='postgres', password='django13', host='localhost', port='5432')            
             
-            result = dbpool.runInteraction(self._createNewNetworkEntry,dbResult=dbResult,code=code)
-            result.addCallback(self._handleStartActions,entry_id=entry_id,dbResult=dbResult,code=code)
+            result = dbpool.runInteraction(self._createNewNetworkEntry,dbResult=dbResult,code=entry_id)
+            result.addCallback(self._handleStartActions,entry_id=entry_id,dbResult=dbResult,code=entry_id)
             result.addErrback(self.printresult)
         
         def _createNewNetworkEntry(self,txn,dbResult,code):
@@ -182,7 +183,9 @@ if __name__ == '__main__':
             dbpool.runInteraction(self._updateDatabase,params)
             
         def _updateDatabase(self,txn,params):
-            id = params['id'];
+	    print "--params--"
+            print params
+            id = params['id']
                 
             txn.execute(
                 "SELECT id FROM drmoon_networkgraph WHERE id = %s",
@@ -195,7 +198,7 @@ if __name__ == '__main__':
             if(result):
                 txn.execute(
                     "UPDATE drmoon_networkgraph SET unique_id = %s, graph_data = %s, complete = %s WHERE id = %s",
-                    (params['code'],params['network_graph'], True, id)
+                    (params['entry_id'],params['network_graph'], True, id)
                 )
             else:
                 raise Exception("Database Exception")

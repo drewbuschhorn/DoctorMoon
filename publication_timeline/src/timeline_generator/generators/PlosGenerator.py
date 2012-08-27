@@ -41,6 +41,7 @@ class PlosInterface(sunburnt.SolrInterface):
         _cacheLength = 0;
         
         def request(self,uri, method="GET", body=None, headers={}, redirections=httplib2.DEFAULT_MAX_REDIRECTS, connection_type=None):
+	    print uri
             if 'cache-control' not in headers:
                 headers['cache-control']='max-age='+str(self._cacheLength)
             return super(PlosInterface.PlosCachingHTTP,self).request(uri,method,body,headers,redirections,connection_type)
