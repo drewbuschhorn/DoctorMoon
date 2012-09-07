@@ -1,5 +1,5 @@
-var w = 560,
-    h = 300,
+var w = 800,
+    h = 600,
     fill = d3.scale.category20();
 
 	function highlight(link){
@@ -63,7 +63,7 @@ d3.json("/networkgraphs/data/"+ENTRY_ID+"/", function(json) {
   var min_y = d3.min(json.nodes, function(d){return find_path(d);});
 
   x = d3.scale.linear().domain([min_x,max_x]).range([50,w-50]);
-  y = d3.scale.linear().domain([min_y,max_y]).range([50,h-50]);
+  y = d3.scale.linear().domain([min_y,max_y]).range([50,h-(h*0.4)]);
 
   /*
   var link = vis.selectAll("line.link")
@@ -130,6 +130,7 @@ d3.json("/networkgraphs/data/"+ENTRY_ID+"/", function(json) {
       .style("fill", function(d) { return fill(d.group); })
       .attr("onmouseover","javascript:d3.select(this.parentNode.childNodes[1]).attr('display','block');")
       .attr("onmouseout","javascript:d3.select(this.parentNode.childNodes[1]).attr('display','none');")
+      .attr("onclick","javascript:document.getElementById(\"viewport\").src=\"http://dx.doi.org/\"+this.parentNode.childNodes[1].firstChild.nodeValue.split(',')[1]+'#contentHeader';return false;")
 
   node.append("svg:text")
       .attr("text-anchor","start")

@@ -12,7 +12,7 @@ import json
 def index(request):
   network_graph_list = NetworkGraph.objects.filter(user=request.user.id)
   print request.user.id
-  paginator = Paginator(network_graph_list, 2)
+  paginator = Paginator(network_graph_list, 10)
   
   # Make sure page request is an int. If not, deliver first page.
   try:
