@@ -3,19 +3,45 @@ var w = 800,
     fill = d3.scale.category20();
 
 	function highlight(link){
-		var path_one = link.getAttribute('class').split(' ')[1];
-		var path_two = link.getAttribute('class').split(' ')[2];
+	    var linkNodeId = link.id.split("link")[1];
+	    console.log(linkNodeId);
+	    var linkNode = data.links[linkNodeId];
+	    linkNode.checked = false;
 
-		var selector = "";
-		if(path_one != "path1"){
-		    selector += "."+path_one+",";
-		}
-		if(path_two != "path1" || selector == ""){
-		    selector += "."+path_two;
-		}
-		selector = selector.replace(/\,$/,'')
-
-		d3.selectAll(selector).style('stroke','black').style('opacity','1.0');
+        var linksToHighlight = [];
+        
+        var linksToCheck = [linkNode];
+        while(linksToCheck.length>0){
+            var nextLinks = [];
+            console.log(linksToCheck);
+            linksToCheck.forEach(function(i){
+                data.links.filter(function(j){
+                                    if((i.target == j.source)
+                                    
+                                    && (i.index != j.index)){
+                                        j.checked = false;
+                                        console.log("target:"+i.target,"source:"+j.source);
+                                        nextLinks.push(j);
+                                        return true;
+                                    }
+                                });
+                i.checked = true;
+                linksToHighlight.push(i);
+            });
+            linksToCheck = jQuery.merge(linksToCheck,nextLinks);
+            linksToCheck = linksToCheck.filter(function(i){return !i.checked;});
+        }
+        
+        //We've got the linksToHighlight now.  Do whatever is fastest to highlight them.
+        
+        console.log(linksToHighlight);
+        
+        linksToHighlight.forEach(function(i,j){
+            linksToHighlight[j] = "#link"+i.index;
+        });
+        console.log(linksToHighlight);
+        console.log(linksToHighlight.join(','));
+        d3.selectAll(linksToHighlight.join(',')).style('stroke','black').style('opacity','1.0');
 	}
 
 	function find_path(node){
@@ -46,16 +72,26 @@ var vis = d3.select("#chart")
 
 var x = null;
 var y = null;
+var data = null;
 
 try{
 
 d3.json("/networkgraphs/data/"+ENTRY_ID+"/", function(json) {
+  data = json;
 
   if(json == null || json == {}){
 	console.log(json);
 	setTimeout(function(){window.location=window.location;},1000);
 	return;
   }
+
+  json.nodes.getNode=function(i){
+    for(var j = 0; j<json.nodes.length; j++){
+        if(i == json.nodes[j].index)
+            return json.nodes[j];
+    }
+    return null;
+  };
 
   var max_x = d3.max(json.nodes, function(d){return find_date(d);});
   var min_x = d3.min(json.nodes, function(d){return find_date(d);});
@@ -97,17 +133,17 @@ d3.json("/networkgraphs/data/"+ENTRY_ID+"/", function(json) {
        .attr("id",function(d,i){return "link"+i})
        .attr("class",function(d){
 		var className = "link";
-		className += " " + "path"+find_path(json.nodes[d.source]);
-		className += " " + "path"+find_path(json.nodes[d.target]);
+		className += " " + "path"+find_path(json.nodes.getNode(d.source));
+		className += " " + "path"+find_path(json.nodes.getNode(d.target));
 		return className;
 	})
        .attr("d", function(d){
 	
 	var i = {}, j = {};
-	i.x = x(find_date(json.nodes[d.source])); 		
-	i.y = path_or_not(json.nodes[d.source]);
-	j.x = x(find_date(json.nodes[d.target]));
-	j.y = path_or_not(json.nodes[d.target]);
+	i.x = x(find_date(json.nodes.getNode(d.source))); 		
+	i.y = path_or_not(json.nodes.getNode(d.source));
+	j.x = x(find_date(json.nodes.getNode(d.target)));
+	j.y = path_or_not(json.nodes.getNode(d.target));
 
 	return	diagonal({source: i, target: j});
 	})
@@ -122,7 +158,7 @@ d3.json("/networkgraphs/data/"+ENTRY_ID+"/", function(json) {
       .attr("id", function(d) { return find_doi(d); });
 
   node.append("svg:circle")
-      .attr("r", 5)
+      .attr("r", 5).attr("text",function(d){return find_doi(d);})
       .attr("cx", function(d){return x(find_date(d));})
       .attr("cy", function(d){
 		return path_or_not(d);
@@ -131,6 +167,15 @@ d3.json("/networkgraphs/data/"+ENTRY_ID+"/", function(json) {
       .attr("onmouseover","javascript:d3.select(this.parentNode.childNodes[1]).attr('display','block');")
       .attr("onmouseout","javascript:d3.select(this.parentNode.childNodes[1]).attr('display','none');")
       .attr("onclick","javascript:document.getElementById(\"viewport\").src=\"http://dx.doi.org/\"+this.parentNode.childNodes[1].firstChild.nodeValue.split(',')[1]+'#contentHeader';return false;")
+
+  node.append("svg:text")
+      .attr("text-anchor","start")
+      .attr("font-size","10")
+      .attr("dx", function(d){return x(find_date(d))+10;})
+      .attr("dy", function(d){
+		return path_or_not(d);
+	})
+      .text(function(d){return d.index});
 
   node.append("svg:text")
       .attr("text-anchor","start")

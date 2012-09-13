@@ -63,7 +63,10 @@ def write_d3_js(G, path, group=None, encoding="utf-8"):
 	fh.write(graph_dump.encode(encoding))
 
 def _doc_to_json(searcher,node_labels,node):
-	node = node_labels[node][1]
+	print node
+	index = node[1][0]
+	node = node[1][1]
+	print index,node
 	
 	return 	{	
 			'name': "%s::%s::%s::%d" %(node.path_index,node.publication_date.absdate,node.id,node.hasMatchingAuthorsName(searcher.core_authors())), 
@@ -72,7 +75,8 @@ def _doc_to_json(searcher,node_labels,node):
 			'publication_date': node.publication_date.absdate,
 			'path_index': node.path_index,
 			'is_original_author': int(node.hasMatchingAuthorsName(searcher.core_authors()),),
-			'title': node.title
+			'title': node.title,
+			'index': index
 			}
 
 def d3_json(G, group=None, searcher = None):
@@ -100,22 +104,38 @@ def d3_json(G, group=None, searcher = None):
 	  {'group': 2, 'nodeName': 2},
 	  {'group': 3, 'nodeName': 3}]}
 	"""
-	ints_graph = nx.convert_node_labels_to_integers(G, discard_old_labels=False)
+	
+	first_label = 0
+	N=G.number_of_nodes()+first_label
+	nlist=G.nodes()
+	print "here!!!"
+	nlist = sorted(nlist, key = lambda k: k.publication_date)
+	print nlist
+	mapping=dict(zip(nlist,range(first_label,len(nlist))))
+	print mapping
+	H=nx.relabel_nodes(G,mapping)
+	H.name="("+G.name+")_with_int_labels"
+	H.node_labels=mapping
+	
+	#ints_graph = nx.convert_node_labels_to_integers(G, discard_old_labels=False)
+	ints_graph = H
 	graph_nodes = ints_graph.nodes(data=True)
 	graph_edges = ints_graph.edges(data=True)
 	
+	print ints_graph.node_labels.items()
+	
 	node_labels = [(b,a) for (a,b) in ints_graph.node_labels.items()]
-	node_labels.sort()
+	#node_labels.sort()
 	
 	# Build up node dictionary in JSON format
 	if group is None:
 		graph_json = 	{'nodes': 
-							map(lambda n : _doc_to_json(searcher,node_labels,n), xrange(len(node_labels))
+							map(lambda n : _doc_to_json(searcher,node_labels,n), enumerate(node_labels)
 							)
 						}
 	else:
 		try:
-			graph_json = {'nodes' : map(lambda n: {'name': str(node_labels[n][1]), 'group' : graph_nodes[n][1][group]}, xrange(len(node_labels)))}
+			graph_json = {'nodes' : map(lambda i,n: {'name': str(node_labels[n][1]), 'group' : graph_nodes[n][1][group]}, enumerate(xrange(len(node_labels))))}
 		except KeyError:
 			raise nx.NetworkXError("The graph had no node attribute for '"+group+"'")
 		
@@ -127,6 +147,8 @@ def d3_json(G, group=None, searcher = None):
 			e['value'] = w['weight']
 		else:
 			e['value'] = 1
+		
+		e['index'] = len(json_edges)
 		json_edges.append(e)
 	
 	graph_json['links'] = json_edges
