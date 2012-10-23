@@ -16,15 +16,29 @@ var w = 800,
             console.log(linksToCheck);
             linksToCheck.forEach(function(i){
                 data.links.filter(function(j){
-                                    if((i.target == j.source)
-                                    
-                                    && (i.index != j.index)){
+                                    if(
+                                    (i.target == j.source)
+                                    && (i.index != j.index)
+                                    ){
                                         j.checked = false;
-                                        console.log("target:"+i.target,"source:"+j.source);
+                                        console.log("1target:"+i.target,"1source:"+j.source);
                                         nextLinks.push(j);
                                         return true;
                                     }
+                                 });
+                /*                 
+                data.links.filter(function(j){                     
+                                    if((
+                                    (i.source == j.target) && (data.nodes.getNode(i.source).publication_date == data.nodes.getNode(i.target).publication_date)
+                                    )&& (i.index != j.index)
+                                    ){
+                                        j.checked = false;
+                                        console.log("2target:"+i.target,"2source:"+j.source);
+                                        nextLinks.push(j);
+                                        return true;
+                                    }                                    
                                 });
+                */
                 i.checked = true;
                 linksToHighlight.push(i);
             });
@@ -33,14 +47,11 @@ var w = 800,
         }
         
         //We've got the linksToHighlight now.  Do whatever is fastest to highlight them.
-        
         console.log(linksToHighlight);
         
         linksToHighlight.forEach(function(i,j){
             linksToHighlight[j] = "#link"+i.index;
         });
-        console.log(linksToHighlight);
-        console.log(linksToHighlight.join(','));
         d3.selectAll(linksToHighlight.join(',')).style('stroke','black').style('opacity','1.0');
 	}
 
