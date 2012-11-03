@@ -1,0 +1,56 @@
+{% extends "admin/base_site.html" %}
+
+{% load url from future %}
+{% load i18n %}
+
+{% block extrastyle %}
+{% load adminmedia %}
+	{{ block.super }}
+	<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/changelists.css" />
+	<script type="text/javascript" src="/files/jquery/jquery.js"></script>
+{% endblock %}
+
+{% block bodyclass %}login{% endblock %}
+
+{% block branding %}
+<br /><br />
+<h1 id="site-name">{% trans 'Your Dr Moon Map' %}</h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block content_title %}{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+
+	<form id="cal_submit" method="GET" action="#">
+		<fieldset>
+		<legend>Enter your network starting point</legend>
+			<label for="doi">Enter your doi:</label>
+			<input type="text" id="doi" name="doi" size="20" />
+			<input type="hidden" id="code" name="code" value={{user_key}} />
+		</fieldset>
+
+		<input type="submit" id="submit-" />
+	</form>
+
+<script>
+$('form').submit(function(){
+  $.ajax({
+    type: "POST",
+    url: "http://{{ url  }}:8880/form",
+    data: $('form').serialize(),
+    dataType: "json",
+    success: function(data) {
+      		var entry_url = "/networkgraphs/detail/";
+		console.log(data['entry_id'],data)
+		window.location = entry_url+data['id'];
+	}
+  });
+  return false;
+});
+</script>
+
+{% endblock %}

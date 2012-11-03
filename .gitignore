@@ -2,3 +2,4 @@
 *.*~
 example.log
 build/*
+*.db

@@ -1,0 +1,46 @@
+{% extends "admin/base_site.html" %}
+
+{% load url from future %}
+{% load i18n %}
+
+{% block extrastyle %}{% load adminmedia %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/changelists.css" />{% endblock %}
+
+{% block bodyclass %}login{% endblock %}
+
+{% block branding %}
+<br /><br />
+<h1 id="site-name">{% trans 'Your Dr Moon Maps' %}</h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block content_title %}{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+
+<div id="content-main">
+
+{% for network_graph in network_graphs.object_list %}
+<a href="{% url 'drmoon.networkgraph_views.details' network_graph.id  %}">{{ network_graph.unique_id|upper }}</a><br />
+{% endfor %}
+
+<p class="paginator">
+    <span class="step-links">
+        {% if network_graphs.has_previous %}
+            <a href="?page={{ network_graphs.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ network_graphs.number }} of {{ network_graphs.paginator.num_pages }}.
+        </span>
+
+        {% if network_graphs.has_next %}
+            <a href="?page={{ network_graphs.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</p>
+
+</div>
+{% endblock %}

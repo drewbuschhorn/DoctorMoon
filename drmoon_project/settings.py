@@ -175,6 +175,7 @@ INSTALLED_APPS = [
     # project
     "about",
     "profiles",
+    "drmoon",
 ]
 
 FIXTURE_DIRS = [
