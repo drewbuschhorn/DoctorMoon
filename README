@@ -15,3 +15,9 @@ PlosGenerator:
 
 ArxivGenerator:
 	feedparser - pip install
+
+Pinax:
+pip install Pinax==0.9a2
+#doctor moon creation
+#pinax-admin setup_project -b basic drmoon_project
+pip -r drmoon_project/requirements/base.txt 
