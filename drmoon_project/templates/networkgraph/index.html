@@ -1,24 +1,11 @@
-{% extends "admin/base_site.html" %}
+{% extends "site_base.html" %}
 
-{% load url from future %}
 {% load i18n %}
+{% load ifsetting_tag %}
 
-{% block extrastyle %}{% load adminmedia %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/changelists.css" />{% endblock %}
+{% block head_title %}{% trans "Your Moon Map submission" %}{% endblock %}
 
-{% block bodyclass %}login{% endblock %}
-
-{% block branding %}
-<br /><br />
-<h1 id="site-name">{% trans 'Your Dr Moon Maps' %}</h1>
-{% endblock %}
-
-{% block nav-global %}{% endblock %}
-
-{% block content_title %}{% endblock %}
-
-{% block breadcrumbs %}{% endblock %}
-
-{% block content %}
+{% block body %}
 
 <div id="content-main">
 

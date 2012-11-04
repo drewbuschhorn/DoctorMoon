@@ -1,7 +1,9 @@
-{% extends "admin/base_site.html" %}
+{% extends "site_base.html" %}
 
-{% load url from future %}
 {% load i18n %}
+{% load ifsetting_tag %}
+
+{% block head_title %}{% trans "Your Moon Map submission" %}{% endblock %}
 
 {% block extrastyle %}
 {% load adminmedia %}
@@ -16,20 +18,7 @@
 	<script type="text/javascript" src="/files/jquery/jquery.js"></script>
 {% endblock %}
 
-{% block bodyclass %}login{% endblock %}
-
-{% block branding %}
-<br /><br />
-<h1 id="site-name">{% trans 'Your Dr Moon Map' %}</h1>
-{% endblock %}
-
-{% block nav-global %}{% endblock %}
-
-{% block content_title %}{% endblock %}
-
-{% block breadcrumbs %}{% endblock %}
-
-{% block content %}
+{% block body %}
 
 <script>
 	var ENTRY_ID = {{ network_graph.id }};

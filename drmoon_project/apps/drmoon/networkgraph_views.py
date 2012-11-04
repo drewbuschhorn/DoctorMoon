@@ -1,4 +1,5 @@
 from django.http import HttpResponse,Http404
+from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.contrib.auth.decorators import login_required
@@ -26,7 +27,9 @@ def index(request):
   except (EmptyPage, InvalidPage):
       raise Http404
 
-  return render_to_response('networkgraph/index.html', {'network_graphs': network_graphs})
+  return render_to_response('networkgraph/index.html', 
+            {'network_graphs': network_graphs},
+            context_instance=RequestContext(request))
 
 
 
@@ -41,13 +44,16 @@ def details(request, network_id):
     if request.user.id is not network.user.id:
 	raise PermissionDenied
 
-    return render_to_response('networkgraph/detail.html', {'network_graph': network})
+    return render_to_response('networkgraph/detail.html', 
+                                {'network_graph': network},
+                                context_instance=RequestContext(request))
 
 
 @login_required
 def form(request):
     return render_to_response('networkgraph/form.html',
-	{'user_key':UserProfile.objects.get_or_create(user=request.user)[0].request_code,'url':request.get_host().split(':')[0]}
+	    {'user_key':UserProfile.objects.get_or_create(user=request.user)[0].request_code,'url':request.get_host().split(':')[0]},
+	    context_instance=RequestContext(request)
     )
 
 @login_required
