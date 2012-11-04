@@ -92,7 +92,7 @@ d3.json("/networkgraphs/data/"+ENTRY_ID+"/", function(json) {
 
   if(json == null || json == {}){
 	console.log(json);
-	setTimeout(function(){window.location=window.location;},1000);
+	//setTimeout(function(){window.location=window.location;},1000);
 	return;
   }
 
@@ -203,5 +203,5 @@ d3.json("/networkgraphs/data/"+ENTRY_ID+"/", function(json) {
 
 }catch(e){
 console.log(e);
-setTimeout(function(){window.location=window.location;},1000);
+//setTimeout(function(){window.location=window.location;},1000);
 }

@@ -5,27 +5,22 @@
 
 {% block head_title %}{% trans "Your Moon Map submission" %}{% endblock %}
 
-{% block extrastyle %}
-{% load adminmedia %}
+{% block extra_head %}
 	{{ block.super }}
-	<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/changelists.css" />
-
-	<script type="text/javascript" src="/files/d3/d3.js"></script>
-	<script type="text/javascript" src="/files/d3/d3.geom.js"></script>
-	<script type="text/javascript" src="/files/d3/d3.layout.js"></script>
-	<link type="text/css" rel="stylesheet" href="/files/d3/force.css"/>
-
-	<script type="text/javascript" src="/files/jquery/jquery.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/d3/d3.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/d3/d3.geom.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/d3/d3.layout.js"></script>
+	<link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}js/d3/force.css"/>
 {% endblock %}
 
 {% block body %}
 
+<iframe style="height:300px; width:30%; float:right" id="viewport" src="">Nothing</iframe>
+<div id="chart" style="outline: 1px solid black; width: 800px; height: 600px;"></div>
+
+
 <script>
 	var ENTRY_ID = {{ network_graph.id }};
 </script>
-
-<iframe style="height:300px; width:30%; float:right" id="viewport" src="">Nothing</iframe>
-   <div id="chart" style="outline: 1px solid black; width: 800px; height: 600px;"></div>
-    <script type="text/javascript" src="/files/d3/mikedewar.js"></script>
-
+<script type="text/javascript" src="{{ STATIC_URL }}js/d3/mikedewar.js"></script>
 {% endblock %}
