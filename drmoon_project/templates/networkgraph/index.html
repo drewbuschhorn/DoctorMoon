@@ -7,12 +7,19 @@
 
 {% block body %}
 
+<div><a class="btn" href="{% url networkgraphs_form %}">{% trans "Click here to create a new Moon Map" %}</a></div>
+
 <div id="content-main">
-
+<p style="margin-top: 2em;">
 {% for network_graph in network_graphs.object_list %}
-<a href="{% url 'drmoon.networkgraph_views.details' network_graph.id  %}">{{ network_graph.unique_id|upper }}</a><br />
+<div style="font-size: larger !important; margin-top: 0.5em;">
+<a href="{% url networkgraphs_detail network_graph.id  %}">{{ network_graph.unique_id|lower }}</a>&nbsp;
+<a href="http://dx.doi.org/{{ network_graph.unique_id|lower }}" title="{% trans "Click to view original paper" %}"><i class="icon-asterisk">*</i></a>
+</div>
 {% endfor %}
+</p>
 
+{% if needs_pagination %}
 <p class="paginator">
     <span class="step-links">
         {% if network_graphs.has_previous %}
@@ -28,6 +35,7 @@
         {% endif %}
     </span>
 </p>
+{% endif %}
 
 </div>
 {% endblock %}

@@ -11,9 +11,14 @@ import json
 
 @login_required
 def index(request):
-  network_graph_list = NetworkGraph.objects.filter(user=request.user.id)
   print request.user.id
-  paginator = Paginator(network_graph_list, 10)
+
+  network_graph_list = NetworkGraph.objects.filter(user=request.user.id)
+  paginator = Paginator(network_graph_list, 5)
+  
+  needs_pagination = False
+  if len(network_graph_list) > 5:
+    needs_pagination = True
   
   # Make sure page request is an int. If not, deliver first page.
   try:
@@ -28,7 +33,9 @@ def index(request):
       raise Http404
 
   return render_to_response('networkgraph/index.html', 
-            {'network_graphs': network_graphs},
+            {'network_graphs': network_graphs,
+             'needs_pagination': needs_pagination,
+            },
             context_instance=RequestContext(request))
 
 
