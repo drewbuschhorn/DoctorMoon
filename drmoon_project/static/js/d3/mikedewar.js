@@ -1,9 +1,11 @@
     var w = 800;
     var h = 600;
+    var fixed_highlighting = false;
 
     fill = d3.scale.category20();
 
 	function highlight(link){
+	
 	    var linkNodeId = link.id.split("link")[1];
 	    var linkNode = data.links[linkNodeId];
 	    linkNode.checked = false;
@@ -59,6 +61,26 @@
 			return y(find_path(node));
 		}
 	}
+	
+	function node_highlight(node_id){
+            if(fixed_highlighting!==false){
+                var _oldNode = fixed_highlighting;
+                d3.selectAll('.link').style('stroke','grey').style('opacity','0.3');
+                fixed_highlighting = false;
+                if(_oldNode == node_id){
+                    return;
+                }
+            }
+      
+            $(data.links)
+            .filter(function(){return (this.source==node_id)}) //||(this.target==node_id)})
+            .each(function(){
+                var a = this.index;
+                highlight($("#link"+this.index)[0]);
+                fixed_highlighting = node_id;
+            })	
+	}
+	
 
 var vis = d3.select("#chart")
     .append("svg:svg")
@@ -103,8 +125,8 @@ d3.json(url, function(json) {
        .data(json.links).enter()
        .append("svg:path")
        .attr("style","fill:none; stroke: grey; opacity:0.3;")
-       .attr("onmouseover","javascript:highlight(this)")
-       .attr("onmouseout","javascript: d3.selectAll('.link').style('stroke','grey').style('opacity','0.3');")
+       .attr("onmouseover","javascript:if(fixed_highlighting===false){highlight(this)}")
+       .attr("onmouseout", "javascript:if(fixed_highlighting===false){d3.selectAll('.link').style('stroke','grey').style('opacity','0.3');}")
        .attr("id",function(d,i){return "link"+i})
        .attr("class",function(d){
 		    var className = "link";
@@ -133,6 +155,7 @@ d3.json(url, function(json) {
       .attr("cx", function(d){return x(find_date(d));})
       .attr("cy", function(d){return path_or_not(d);})
       .style("fill", function(d){return fill(d.group);})
+      .attr("onclick",function(d){return "javascript:node_highlight("+d.index+");"});
 
   node.append("svg:text")
       .attr("text-anchor","start")
