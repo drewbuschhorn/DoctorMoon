@@ -15,11 +15,23 @@
 
 {% block body %}
 
-<div id="chart" style="outline: 1px solid black; width: 800px; height: 600px;"></div>
+<div class="span3 pull-left"> <!-- maybe switch to sidebar ? -->
+    <div id="well" class="well">&nbsp;</div>
+</div>
+<div class="content">
 
+    <div class="row">
+        <div class="span10">
+            <div id="chart"></div>
+        </div>
+        <div class="span3">
+            <iframe style="width: 440px; height: 400px; border: 0px" id="viewport" src="">Nothing</iframe>
+        </div>
+    </div>
 
-<script>
-	var ENTRY_ID = {{ network_graph.id }};
-</script>
-<script type="text/javascript" src="{{ STATIC_URL }}js/d3/mikedewar.js"></script>
+    <script>
+	    var ENTRY_ID = {{ network_graph.id }};
+    </script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/d3/mikedewar.js"></script>
+</div>
 {% endblock %}

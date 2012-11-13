@@ -1,5 +1,5 @@
-    var w = 800;
-    var h = 600;
+    var w = $('#chart').width();
+    var h = 700;
     var fixed_highlighting = false;
 
     fill = d3.scale.category20();
@@ -72,6 +72,11 @@
                 }
             }
       
+            // TODO: Uselss debugging code - delete before release.
+            var e = $(data.nodes).filter(function(){return node_id == this.index;});
+            document.getElementById("viewport").src="http://dx.doi.org/"+e[0].doi+'#contentHeader';
+            //End useless code
+            
             $(data.links)
             .filter(function(){return (this.source==node_id)}) //||(this.target==node_id)})
             .each(function(){
@@ -116,8 +121,8 @@ d3.json(url, function(json) {
   var max_y = d3.max(json.nodes, function(d){return find_path(d);});
   var min_y = d3.min(json.nodes, function(d){return find_path(d);});
 
-  x = d3.scale.linear().domain([min_x,max_x]).range([50,w-50]);
-  y = d3.scale.linear().domain([min_y,max_y]).range([50,h-(h*0.4)]);
+  x = d3.scale.linear().domain([min_x,max_x]).range([w*.05,w-(w*.05)]);
+  y = d3.scale.linear().domain([min_y,max_y]).range([h*.05,h-(h*0.4)]);
 
  var diagonal = d3.svg.diagonal();
 
@@ -164,8 +169,38 @@ d3.json(url, function(json) {
       .attr("dx", function(d){return x(find_date(d))+10;})
       .attr("dy", function(d){return path_or_not(d);})
       .text(function(d){return find_path(d)+','+find_doi(d)});
+
+    //Generate path list for sidebar
+    path_setup(); 
+    
     });
 
 }catch(e){
 console.log(e);
+}
+
+function path_setup(){
+
+        path_list = new Array();
+        $(data.nodes).each(
+            function(index,value){
+                if(jQuery.inArray(value.path_index,path_list)==-1)
+                { path_list.push(value.path_index); };
+            }
+        );
+        path_list.sort(
+            function(a,b){
+                if(a>b){return 1;}else{return -1;}
+            }
+        );
+        
+        d3.select("#well").append("ul")
+            .selectAll("li")
+            .data(path_list).enter()
+            .append("li")
+                .html(function(d){
+                var src = "javascript:if(fixed_highlighting===false){d3.selectAll('.link').style('stroke','grey').style('opacity','0.3'); d3.selectAll('.path"+d+"').style('stroke','black').style('opacity','1')}";
+                return "<a href=\""+src+"\">Path "+d+"</a>"
+                })
+                .attr("id",function(d){return "_"+d;});       
 }
