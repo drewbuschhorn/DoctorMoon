@@ -47,14 +47,21 @@ if __name__ == '__main__':
                 print "results length : %s",(len(self.searcher.generator.results), )
                 
                 grapher = Grapher()
+                graph_paths = []
     
                 newg = nx.Graph()
                 for path in self.searcher.useful_paths:
                     print '%s - %s' % (self.uuid,path)
                     newg.add_path(path)
                     grapher.paths.append(path)
+                    path_s = '%s' % (path)
+                    path_s = path_s.replace(' ','')
+                    # Generate a path array so we don't have to work so
+                    # hard on the client side to figure out the paths to
+                    # highlight, see client side path highlighting
+                    graph_paths.append(path_s[1:-1].split(','))
                 
-                
+                print graph_paths
                 grapher.graph = newg
                 #writer = nx.readwrite.graphml.GraphMLWriter(encoding='utf-8')
                 #writer.add_graph_element(grapher.graph)
@@ -79,6 +86,7 @@ if __name__ == '__main__':
                 # Export 
                 #d3_js.export_d3_js(mikedewar_d3, files_dir="mikedewar", graphname="mikedewar", group=None)                
                 graph_json = d3_js.d3_json(mikedewar, group=None, searcher=self.searcher)
+                graph_json['paths'] = graph_paths
                 
                 import json
                 #self.request.write(json.dumps(graph_json, indent=2))

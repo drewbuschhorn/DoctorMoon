@@ -135,8 +135,8 @@ d3.json(url, function(json) {
        .attr("id",function(d,i){return "link"+i})
        .attr("class",function(d){
 		    var className = "link";
-		    className += " " + "path"+find_path(json.nodes.getNode(d.source));
-		    className += " " + "path"+find_path(json.nodes.getNode(d.target));
+		    className += " " + "path"+json.nodes.getNode(d.source).index;
+		    className += " " + "path"+json.nodes.getNode(d.target).index;
 		    return className;
         })
        .attr("d", function(d){
@@ -180,27 +180,47 @@ console.log(e);
 }
 
 function path_setup(){
-
-        path_list = new Array();
-        $(data.nodes).each(
-            function(index,value){
-                if(jQuery.inArray(value.path_index,path_list)==-1)
-                { path_list.push(value.path_index); };
-            }
-        );
-        path_list.sort(
-            function(a,b){
-                if(a>b){return 1;}else{return -1;}
-            }
-        );
         
         d3.select("#well").append("ul")
             .selectAll("li")
-            .data(path_list).enter()
+            .data(data.paths).enter()
             .append("li")
-                .html(function(d){
-                var src = "javascript:if(fixed_highlighting===false){d3.selectAll('.link').style('stroke','grey').style('opacity','0.3'); d3.selectAll('.path"+d+"').style('stroke','black').style('opacity','1')}";
-                return "<a href=\""+src+"\">Path "+d+"</a>"
+                .html(function(d,i){
+                var src = "javascript:if(fixed_highlighting===false){path_highlighter(\'"+i+"\')}";
+                return "<a href=\""+src+"\">Path "+i+"</a>"
                 })
-                .attr("id",function(d){return "_"+d;});       
+                .attr("id",function(d,i){return "_"+i;});       
+}
+
+function path_highlighter(i){
+    d3.selectAll('.link').style('stroke','grey').style('opacity','0.3');
+
+    //var selectionNodes = new Array();
+    var selectionLinks = new Array;
+    jQuery(data.paths[i]).each(function(j){
+        //selectionNodes.push("g[id='"+this+"'] circle");
+        
+        var linkNodeCurrent = data.paths[i][j];
+        var linkNodeNext = data.paths[i][++j];
+        if(linkNodeNext){
+            jQuery(data.nodes).each(function(k){
+                if(this.doi == linkNodeCurrent)
+                    linkNodeCurrent = this.index;
+                if(this.doi == linkNodeNext)
+                    linkNodeNext = this.index;                
+            });
+        
+            selectionLinks.push("path[class~='path"+linkNodeCurrent+"'][class~='path"+linkNodeNext+"']");
+        }
+        
+    });
+
+
+
+    //d3.selectAll(selectionNodes.join(',')).style('fill','black').style('opacity','1');
+    d3.selectAll(selectionLinks.join(',')).style('stroke','black').style('opacity','1');    
+    
+    
+    
+    return true;
 }
