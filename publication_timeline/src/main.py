@@ -4,12 +4,9 @@ Created on Jul 6, 2011
 @author: dbuschho
 '''
 import networkx as nx
-import cgi
-import StringIO
 import uuid
 
 from twisted.internet import reactor, threads
- 
 from twisted.internet.task import deferLater
 from twisted.web.server import Site,NOT_DONE_YET
 from twisted.web.resource import Resource
@@ -17,8 +14,7 @@ from twisted.python.log import err
 
 
 from Grapher import Grapher
-from PlosSearchStrategy import PlosSearchStrategy
-from timeline_generator.generators.PlosGenerator import PlosGenerator
+from S2SearchStrategy import S2SearchStrategy
 
 if __name__ == '__main__':
     
@@ -30,27 +26,69 @@ if __name__ == '__main__':
             self.searcher = None
             self.uuid = uuid.uuid4()
         
-        def start(self,params):
-            #p = PlosGenerator(u'AVWZBXMiftO65ug')
-            #d = p.populateNodeFromCustomId('10.1371/journal.pmed.0020124')        
-            self.searcher = PlosSearchStrategy(params['entry_id'],self)
+        def start(self):#,params):
+            self.searcher = S2SearchStrategy('dba56b1d8b91142cc772b04655797d0d0f2fc532', self)
             start = self.searcher.start() 
-            start.addCallback(self._send,params = params)
-            self.params = params
+            #start.addCallback(self._send, params = params)
+            #self.params = params
         
         def stop(self):
-            print "ending: %s" %(self.searcher._opennodes,)
+            print ("ending: %s" %(self.searcher._opennodes,))
             self.grapher()
             #reactor.stop()
         
         def grapher(self):
-                print "results length : %s",(len(self.searcher.generator.results), )
+
+
+
+    
+
+
+                print ("results length : %s" % (len(self.searcher.generator.results), ))
                 
                 grapher = Grapher()
     
                 newg = nx.Graph()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
                 for path in self.searcher.useful_paths:
-                    print '%s - %s' % (self.uuid,path)
+                    print ('%s' % path)
+                    #print ('%s - %s' % (self.uuid,path))
                     newg.add_path(path)
                     grapher.paths.append(path)
                 
@@ -122,8 +160,8 @@ if __name__ == '__main__':
             def success(r):
                 return
             def error(e):
-                print "error:115"
-                print e
+                print ("error:115")
+                print (e)
             dfr.addCallback(success)
             dfr.addErrback(error)
             
@@ -140,7 +178,7 @@ if __name__ == '__main__':
                 result.addErrback(self.printresult)
                 #result.addErrback
             except Exception as e:
-                print e
+                print (e)
             
             return result
         
@@ -183,8 +221,8 @@ if __name__ == '__main__':
             dbpool.runInteraction(self._updateDatabase,params)
             
         def _updateDatabase(self,txn,params):
-	    print "--params--"
-            print params
+            print ("--params--")
+            print (params)
             id = params['id']
                 
             txn.execute(
@@ -193,7 +231,7 @@ if __name__ == '__main__':
             )
             
             result = txn.fetchone()                
-            print result
+            print (result)
             
             if(result):
                 txn.execute(
@@ -204,7 +242,7 @@ if __name__ == '__main__':
                 raise Exception("Database Exception")
         
         def printresult(self,x):
-                print x
+                print (x)
                 return x
                        
     class FormPage(Resource):
@@ -236,10 +274,13 @@ if __name__ == '__main__':
                         
             return NOT_DONE_YET
     
-    root = Resource()
-    root.putChild("form", FormPage())
-    factory = Site(root)
-    reactor.listenTCP(8880, factory)
+    #root = Resource()
+    #root.putChild("form", FormPage())
+    #factory = Site(root)
+    #reactor.listenTCP(8880, factory)
+    
+    m = Maintainer()
+    m.start()
     
     reactor.run()
     #m.grapher()
