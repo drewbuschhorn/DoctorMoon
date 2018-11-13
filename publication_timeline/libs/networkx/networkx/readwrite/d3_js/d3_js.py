@@ -34,6 +34,7 @@ from networkx.readwrite.d3_js.d3_js_files import *
 import json
 import re	
 
+
 def write_d3_js(G, path, group=None, encoding="utf-8"):
 	"""Writes a NetworkX graph in D3.js JSON graph format to disk.
 	
@@ -63,18 +64,18 @@ def write_d3_js(G, path, group=None, encoding="utf-8"):
 	fh.write(graph_dump.encode(encoding))
 
 def _doc_to_json(searcher,node_labels,node):
-	print node
+	print (node)
 	index = node[1][0]
 	node = node[1][1]
-	print index,node
+	print (index,node)
 	
 	return 	{	
-			'name': "%s::%s::%s::%d" %(node.path_index,node.publication_date.absdate,node.id,node.hasMatchingAuthorsName(searcher.core_authors())), 
+			'name': "%s::%s::%s::%d" %(node.path_index,node.publication_date,node.id,node.hasMatchingAuthorsName(searcher.core_authors())), 
 			'group' : 0,
 			'doi': node.id,
-			'publication_date': node.publication_date.absdate,
+			'publication_date': node.publication_date,
 			'path_index': node.path_index,
-			'is_original_author': int(node.hasMatchingAuthorsName(searcher.core_authors()),),
+			'is_original_author': 'true' if node.hasMatchingAuthorsName(searcher.core_authors()) else 'false',
 			'title': node.title,
 			'index': index
 			}
@@ -108,11 +109,10 @@ def d3_json(G, group=None, searcher = None):
 	first_label = 0
 	N=G.number_of_nodes()+first_label
 	nlist=G.nodes()
-	print "here!!!"
 	nlist = sorted(nlist, key = lambda k: k.publication_date)
-	print nlist
+	print (nlist)
 	mapping=dict(zip(nlist,range(first_label,len(nlist))))
-	print mapping
+	print (mapping)
 	H=nx.relabel_nodes(G,mapping)
 	H.name="("+G.name+")_with_int_labels"
 	H.node_labels=mapping
@@ -122,7 +122,7 @@ def d3_json(G, group=None, searcher = None):
 	graph_nodes = ints_graph.nodes(data=True)
 	graph_edges = ints_graph.edges(data=True)
 	
-	print ints_graph.node_labels.items()
+	print (ints_graph.node_labels.items())
 	
 	node_labels = [(b,a) for (a,b) in ints_graph.node_labels.items()]
 	#node_labels.sort()

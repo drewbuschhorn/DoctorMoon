@@ -25,7 +25,7 @@ class Grapher(object):
                     y = item.path_index
                     
                 
-                x = float(item.publication_date.absdate)
+                x = float(item.publication_date)
                 x =  (x - 700000)/10000
                 
                 pos.update({item:[x,y]})

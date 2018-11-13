@@ -3,18 +3,24 @@ Created on Jul 6, 2011
 
 @author: dbuschho
 '''
-import networkx as nx
+import sys
+sys.path.append('../libs/networkx')
+import networkx
+from networkx.readwrite import d3_js
 import uuid
+import json as jsn
 
 from twisted.internet import reactor, threads
 from twisted.internet.task import deferLater
 from twisted.web.server import Site,NOT_DONE_YET
 from twisted.web.resource import Resource
+from twisted.internet import reactor, threads, defer
 from twisted.python.log import err
 
 
 from Grapher import Grapher
 from S2SearchStrategy import S2SearchStrategy
+from timeline_generator.generators.S2Generator import S2Generator
 
 if __name__ == '__main__':
     
@@ -28,7 +34,12 @@ if __name__ == '__main__':
         
         def start(self):#,params):
             self.searcher = S2SearchStrategy('dba56b1d8b91142cc772b04655797d0d0f2fc532', self)
-            start = self.searcher.start() 
+            
+            #Disabling searcher to save time
+            #start = self.searcher.start() 
+            
+            self.grapher()
+            
             #start.addCallback(self._send, params = params)
             #self.params = params
         
@@ -37,56 +48,47 @@ if __name__ == '__main__':
             self.grapher()
             #reactor.stop()
         
+        @defer.inlineCallbacks  
         def grapher(self):
-
-
-
-    
-
-
-                print ("results length : %s" % (len(self.searcher.generator.results), ))
+                #First grab the data and cut it down to size
+                with open("D:\\corpus\\paths.json2", "r", encoding="utf8") as f:
+                    data = jsn.load(f)
+                    data_subset = data[200:210]
                 
+                generator = S2Generator(u'D:\corpus\downloads', 
+                                     u'D:\corpus\processed_data\id_positions.sqlite3')
+                                    
+                real_networks = []
+                for network in data_subset: 
+                    real_network = []
+                    for customId in network:
+                        node = yield generator.populateNodeFromCustomId(customId)
+                        node.path_index = len(real_networks)
+                        real_network.append(node)
+                    real_networks.append(real_network)
+                print (real_networks[0],real_networks[0][0].author)
+                #
+                
+            
+                print ("results length : %s" % (len(generator.results), ))
                 grapher = Grapher()
-    
-                newg = nx.Graph()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                newg = networkx.Graph()
                 
-                for path in self.searcher.useful_paths:
+                all_nodes = set()
+                for i in real_networks:
+                    for j in i:
+                        all_nodes = all_nodes.union(set([j.id]))
+                
+                node_to_vocab = dict()
+                vocab_to_node = dict()
+                for i in all_nodes:
+                    node_to_vocab[i] = len(node_to_vocab)
+                    vocab_to_node[len(vocab_to_node)] = i
+                
+                
+                
+                for path in real_networks:
                     print ('%s' % path)
                     #print ('%s - %s' % (self.uuid,path))
                     newg.add_path(path)
@@ -98,8 +100,7 @@ if __name__ == '__main__':
                 #writer.add_graph_element(grapher.graph)
                 #output = StringIO.StringIO()
                 #writer.dump(self.request)
-                
-                from networkx.readwrite import d3_js
+            
                 
                 # mikedewar = nx.read_graphml('mikedewar_rec.graphml')
                 mikedewar = newg
@@ -118,11 +119,14 @@ if __name__ == '__main__':
                 #d3_js.export_d3_js(mikedewar_d3, files_dir="mikedewar", graphname="mikedewar", group=None)                
                 graph_json = d3_js.d3_json(mikedewar, group=None, searcher=self.searcher)
                 
-                import json
                 #self.request.write(json.dumps(graph_json, indent=2))
-                params = self.params
-                params['network_graph'] = json.dumps(graph_json, indent=2)
-                self.updateDatabase(params)
+                if self.searcher.core_node is None:
+                    self.searcher.core_node = yield generator.populateNodeFromCustomId(self.searcher.core_node_id)
+                    
+                #print (list(graph_json['nodes']))
+                with open('json.json', 'w') as outputfile:
+                    jsn.dump({'nodes':list(graph_json['nodes']), 'links':graph_json['links']}, outputfile, indent=2)
+                #self.updateDatabase(params)
                 
                 #self.request.finish()
                 #output.close()

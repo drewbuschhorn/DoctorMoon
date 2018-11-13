@@ -42,6 +42,7 @@ class S2Generator(object):
                 #print(line)
                 json_data = json.loads(line)
                 doc.id = json_data['id']
+                doc.title = json_data['title']
                 doc.citedWorks = json_data['outCitations']
                 doc.citingWorks = json_data['inCitations']
                 doc.authors = []
@@ -57,6 +58,7 @@ class S2Generator(object):
                 else:
                     print ("Skipping: " + json_data['id'])
                     return doc
+                doc.publication_date = doc.datestamp
                 return doc
             
         except Exception as inst:

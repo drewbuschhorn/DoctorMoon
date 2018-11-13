@@ -75,6 +75,7 @@ var w = 800,
 			return y(find_path(node));
 		}
 	}
+  
 
 var vis = d3.select("#chart")
   .append("svg:svg")
@@ -87,7 +88,9 @@ var data = null;
 
 try{
 
-d3.json("/networkgraphs/data/"+ENTRY_ID+"/", function(json) {
+d3.json("./mikedewar.js", function(json) {
+  
+  json = myjson;
   data = json;
 
   if(json == null || json == {}){
@@ -95,6 +98,36 @@ d3.json("/networkgraphs/data/"+ENTRY_ID+"/", function(json) {
 	//setTimeout(function(){window.location=window.location;},1000);
 	return;
   }
+  
+  // Should probably fix this on the server side, but networkx is being a pain about realizing duplicate entry objects
+  var dupe_map = []
+  for (var i in json.nodes) {
+    dupe_map[i] = []
+    for (var j in json.nodes) {
+      if (json.nodes[i].doi == json.nodes[j].doi) {
+        if (dupe_map[i]) {
+          dupe_map[i].push(json.nodes[j].index);
+        } else {
+          dupe_map[i] = [json.nodes[j].index];
+        }
+      }
+    }
+  }
+  
+  for (var i in json.links) {
+    json.links[i].source = dupe_map[json.links[i].source][0];
+    json.links[i].target = dupe_map[json.links[i].target][0];
+  }
+  
+  json.nodes = json.nodes.filter(function(i){
+    for (var j in json.links) {
+      if (json.links[j].source == i.index)
+        return true;
+      if (json.links[j].target == i.index)
+        return true;
+    }
+    return false;
+  });
 
   json.nodes.getNode=function(i){
     for(var j = 0; j<json.nodes.length; j++){
@@ -180,13 +213,16 @@ d3.json("/networkgraphs/data/"+ENTRY_ID+"/", function(json) {
       .attr("onclick","javascript:document.getElementById(\"viewport\").src=\"http://dx.doi.org/\"+this.parentNode.childNodes[1].firstChild.nodeValue.split(',')[1]+'#contentHeader';return false;")
 
   node.append("svg:text")
+  .attr("height","auto")
+      .attr("width","500")
       .attr("text-anchor","start")
       .attr("font-size","10")
       .attr("dx", function(d){return x(find_date(d))+10;})
       .attr("dy", function(d){
-		return path_or_not(d);
+		return path_or_not(d)
 	})
-      .text(function(d){return d.index});
+      .text(function(d){return d.title})
+      ;
 
   node.append("svg:text")
       .attr("text-anchor","start")
@@ -197,9 +233,29 @@ d3.json("/networkgraphs/data/"+ENTRY_ID+"/", function(json) {
 	})
       .attr("display","none")
       .text(function(d){return find_path(d) + ',' + find_doi(d)});
+      
+  vis.append("svg:g")
+    .attr('transform', 'translate(10%, 10%)')
+    .append("svg:text")
+      .attr('font-size', '10')
+      .attr('dx', '0')
+      .attr('dy', '0')
+      .attr('transform', 'rotate(90)')
+      .text(new Date(min_x * 1e3).toISOString().slice(0,10))
+      
+  vis.append("svg:g")
+    .attr('transform', 'translate(10%, 90%)')
+    .append("svg:text")
+      .attr('font-size', '10')
+      .attr('dx', '0')
+      .attr('dy', '0')
+      .attr('transform', 'rotate(90)')
+      .text(new Date(max_x * 1e3).toISOString().slice(0,10))
     
- //   node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-});
+      
+ });
+
+
 
 }catch(e){
 console.log(e);
