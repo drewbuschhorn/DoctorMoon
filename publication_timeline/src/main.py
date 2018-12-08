@@ -125,6 +125,7 @@ if __name__ == '__main__':
                     
                 #print (list(graph_json['nodes']))
                 with open('json.json', 'w') as outputfile:
+                    outputfile.write("var myjson=")
                     jsn.dump({'nodes':list(graph_json['nodes']), 'links':graph_json['links']}, outputfile, indent=2)
                 #self.updateDatabase(params)
                 

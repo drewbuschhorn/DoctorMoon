@@ -71,7 +71,7 @@ def _doc_to_json(searcher,node_labels,node):
 	
 	return 	{	
 			'name': "%s::%s::%s::%d" %(node.path_index,node.publication_date,node.id,node.hasMatchingAuthorsName(searcher.core_authors())), 
-			'group' : 0,
+			'group' : node.path_index,
 			'doi': node.id,
 			'publication_date': node.publication_date,
 			'path_index': node.path_index,
@@ -135,7 +135,7 @@ def d3_json(G, group=None, searcher = None):
 						}
 	else:
 		try:
-			graph_json = {'nodes' : map(lambda i,n: {'name': str(node_labels[n][1]), 'group' : graph_nodes[n][1][group]}, enumerate(xrange(len(node_labels))))}
+			graph_json = {'nodes' : map(lambda i,n: {'name': str(node_labels[n][1]), 'group' : graph_nodes[n][1][group]}, enumerate(range(len(node_labels))))}
 		except KeyError:
 			raise nx.NetworkXError("The graph had no node attribute for '"+group+"'")
 		

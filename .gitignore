@@ -4,3 +4,4 @@ example.log
 build/*
 *.db
 .spyproject/*
+publication_timeline/src/*.json
