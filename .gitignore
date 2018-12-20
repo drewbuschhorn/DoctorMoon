@@ -3,5 +3,6 @@
 example.log
 build/*
 *.db
-.spyproject/*
+//.spyproject/*
 publication_timeline/src/*.json
+publication_timeline/src/data/*.json

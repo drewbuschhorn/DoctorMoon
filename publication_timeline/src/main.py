@@ -2,8 +2,14 @@
 Created on Jul 6, 2011
 
 @author: dbuschho
-'''
-import sys
+Y'''
+
+START_PAPER = u"7ba400225356a7d389f04e13e2d2506f40774fc8" #u"dba56b1d8b91142cc772b04655797d0d0f2fc532"
+CORPUS_PATH = u"D:\\corpus\\"
+CORPUS_SQLLITE_PATH = u"D:\\corpus\\processed_data\\id_positions.sqlite3"
+TEMP_NODE_STORE = u"D:\\corpus\\processed_data\\tmp.json"
+
+import sys, time, os
 sys.path.append('../libs/networkx')
 import networkx
 from networkx.readwrite import d3_js
@@ -23,40 +29,49 @@ from S2SearchStrategy import S2SearchStrategy
 from timeline_generator.generators.S2Generator import S2Generator
 
 if __name__ == '__main__':
-    
-    import logging
-    logging.basicConfig(filename='example.log', filemode='w', level=logging.DEBUG)
-    
     class Maintainer(object):
         def __init__(self):
             self.searcher = None
             self.uuid = uuid.uuid4()
         
         def start(self):#,params):
-            self.searcher = S2SearchStrategy('dba56b1d8b91142cc772b04655797d0d0f2fc532', self)
+            self.searcher = S2SearchStrategy(START_PAPER, self)
             
-            #Disabling searcher to save time
-            #start = self.searcher.start() 
+            start = False
+            if os.path.isfile(TEMP_NODE_STORE):
+                print (u"Temp node store " + TEMP_NODE_STORE + u" exists.")
+                print (u"Do you want to purge it and start the search over again? [Y/N]")
+                removeFile = None
+                while removeFile is not 'Y' and removeFile is not 'N':
+                    removeFile = input() 
+                if removeFile is 'Y':
+                    os.remove(TEMP_NODE_STORE)
+                    start = True
+            else:
+                start = True
             
-            self.grapher()
-            
-            #start.addCallback(self._send, params = params)
-            #self.params = params
+            if start:
+                self.searcher.start()
+            else:
+                self.grapher()
         
         def stop(self):
             print ("ending: %s" %(self.searcher._opennodes,))
             self.grapher()
-            #reactor.stop()
         
-        @defer.inlineCallbacks  
-        def grapher(self):
+        @defer.inlineCallbacks 
+        # subset = (start, end)
+        def grapher(self, subset=None):
                 #First grab the data and cut it down to size
-                with open("D:\\corpus\\paths.json2", "r", encoding="utf8") as f:
+                with open(TEMP_NODE_STORE, "r") as f:
                     data = jsn.load(f)
-                    data_subset = data[200:210]
+                    if subset is not None:
+                        data_subset = data[subset[0], subset[1]]
+                    else:
+                        data_subset = data
                 
-                generator = S2Generator(u'D:\corpus\downloads', 
-                                     u'D:\corpus\processed_data\id_positions.sqlite3')
+                generator = S2Generator(CORPUS_PATH,
+                                     CORPUS_SQLLITE_PATH)
                                     
                 real_networks = []
                 for network in data_subset: 
@@ -66,13 +81,8 @@ if __name__ == '__main__':
                         node.path_index = len(real_networks)
                         real_network.append(node)
                     real_networks.append(real_network)
-                print (real_networks[0],real_networks[0][0].author)
-                #
                 
-            
-                print ("results length : %s" % (len(generator.results), ))
                 grapher = Grapher()
-
                 newg = networkx.Graph()
                 
                 all_nodes = set()
@@ -86,206 +96,30 @@ if __name__ == '__main__':
                     node_to_vocab[i] = len(node_to_vocab)
                     vocab_to_node[len(vocab_to_node)] = i
                 
-                
-                
                 for path in real_networks:
-                    print ('%s' % path)
-                    #print ('%s - %s' % (self.uuid,path))
                     newg.add_path(path)
                     grapher.paths.append(path)
                 
-                
                 grapher.graph = newg
-                #writer = nx.readwrite.graphml.GraphMLWriter(encoding='utf-8')
-                #writer.add_graph_element(grapher.graph)
-                #output = StringIO.StringIO()
-                #writer.dump(self.request)
-            
-                
-                # mikedewar = nx.read_graphml('mikedewar_rec.graphml')
                 mikedewar = newg
                 
-                # We need to relabel nodes as Twitter name if we want to show the names in the plot
-                #def gen_label(node):
-                #    label = ""
-                #    label = "%s::%s::%s::%d" %(node.path_index,node.publication_date.absdate,node.id,node.hasMatchingAuthorsName(self.searcher.core_authors()))
-                #    print label
-                #    return label
-                    
-                #label_dict = dict(map(lambda i : (mikedewar.nodes()[i], gen_label(mikedewar.nodes()[i])), xrange(mikedewar.number_of_nodes())))
-                #mikedewar_d3 = nx.relabel_nodes(mikedewar, label_dict)    
-                
-                # Export 
-                #d3_js.export_d3_js(mikedewar_d3, files_dir="mikedewar", graphname="mikedewar", group=None)                
                 graph_json = d3_js.d3_json(mikedewar, group=None, searcher=self.searcher)
                 
-                #self.request.write(json.dumps(graph_json, indent=2))
                 if self.searcher.core_node is None:
                     self.searcher.core_node = yield generator.populateNodeFromCustomId(self.searcher.core_node_id)
-                    
-                #print (list(graph_json['nodes']))
-                with open('json.json', 'w') as outputfile:
-                    outputfile.write("var myjson=")
+                if graph_json['links'] is None or graph_json['nodes'] is None:
+                    print ("Mapping failed")
+                    exit()
+                
+                output_name = self.searcher.core_node_id + "_" +  str(int(time.time())) + ".json"
+                with open('data/' + output_name, 'w+') as outputfile:
+                    outputfile.write("var timelineData = ") # Just to make life easier for everyone
                     jsn.dump({'nodes':list(graph_json['nodes']), 'links':graph_json['links']}, outputfile, indent=2)
-                #self.updateDatabase(params)
-                
-                #self.request.finish()
-                #output.close()
-                #grapher.render(self.searcher,self.searcher.core_node)
-    
-    
-        def _send(self,result,params):
-            #self.send("Run finished","Run finished", "dbuschho@localhost",[params['dbResult'][0][1]])
-    	    pass
-
-        def send(self,message=None, subject=None, sender=None, recipients=None, host=None):
-            """
-            Send email to one or more addresses.
-            """
-            from email.mime.text import MIMEText
-            from twisted.python import log
-
-            import warnings
-            warnings.filterwarnings('ignore','.*MimeWriter*.',DeprecationWarning,'twisted' )            
-            from twisted.mail.smtp import sendmail
-
-
-            message = 'This is the message body'
-            subject = 'This is the message subject'
-            
-            host = 'localhost'
-            sender = 'dbuschho'
-        
-            msg = MIMEText(message)
-            msg['Subject'] = subject
-            msg['From'] = sender
-            msg['To'] = ', '.join(recipients)
-        
-            dfr = sendmail(host, sender, recipients, msg.as_string())
-            def success(r):
-                return
-            def error(e):
-                print ("error:115")
-                print (e)
-            dfr.addCallback(success)
-            dfr.addErrback(error)
-            
-    
-        def getUserDataFromDatabase(self,code,entry_id):
-            from twisted.enterprise import adbapi
-            
-            try:
-                dbpool = adbapi.ConnectionPool("psycopg2", 
-                                database='drmoon', user='postgres', password='django13', host='localhost', port='5432')            
-                result = dbpool.runQuery("SELECT auth_user.id,auth_user.email from auth_user LEFT JOIN drmoon_userprofile ON drmoon_userprofile.user_id = auth_user.id WHERE drmoon_userprofile.request_code = %s ",(code,))
-                 
-                result.addCallback(self.createNewNetworkEntry,code=code,entry_id=entry_id)
-                result.addErrback(self.printresult)
-                #result.addErrback
-            except Exception as e:
-                print (e)
-            
-            return result
-        
-        def createNewNetworkEntry(self,dbResult,code,entry_id):
-            from twisted.enterprise import adbapi
-            dbpool = adbapi.ConnectionPool("psycopg2", 
-                            database='drmoon', user='postgres', password='django13', host='localhost', port='5432')            
-            
-            result = dbpool.runInteraction(self._createNewNetworkEntry,dbResult=dbResult,code=entry_id)
-            result.addCallback(self._handleStartActions,entry_id=entry_id,dbResult=dbResult,code=entry_id)
-            result.addErrback(self.printresult)
-        
-        def _createNewNetworkEntry(self,txn,dbResult,code):
-            user_id = dbResult[0][0]
-
-            txn.execute("INSERT INTO drmoon_networkgraph( \
-                user_id, created, modified, unique_id, graph_data, shared, complete) \
-                VALUES (%s, NOW(), NOW(), %s, %s ,false,false)",(user_id,code,' '))
-            
-            txn.execute("SELECT lastval()")
-            result = txn.fetchall()
-            return result[0][0]
-
-        def _handleStartActions(self,result,entry_id,dbResult,code):
-            params = {'entry_id':entry_id,'dbResult':dbResult,'code':code,'id':result}
-            self.start(params)
-            
-            import json
-            self.request.write(json.dumps(params))
-            
-            self.request.finish()
-
-        def updateDatabase(self,params):
-            # Using the "dbmodule" from the previous example, create a ConnectionPool 
-            from twisted.enterprise import adbapi
-            dbpool = adbapi.ConnectionPool("psycopg2", 
-                            database='drmoon', user='postgres', password='django13', host='localhost', port='5432')            
-            
-            # equivalent of cursor.execute(statement), return cursor.fetchall():
-            dbpool.runInteraction(self._updateDatabase,params)
-            
-        def _updateDatabase(self,txn,params):
-            print ("--params--")
-            print (params)
-            id = params['id']
-                
-            txn.execute(
-                "SELECT id FROM drmoon_networkgraph WHERE id = %s",
-                (id,)
-            )
-            
-            result = txn.fetchone()                
-            print (result)
-            
-            if(result):
-                txn.execute(
-                    "UPDATE drmoon_networkgraph SET unique_id = %s, graph_data = %s, complete = %s WHERE id = %s",
-                    (params['entry_id'],params['network_graph'], True, id)
-                )
-            else:
-                raise Exception("Database Exception")
-        
-        def printresult(self,x):
-                print (x)
-                return x
-                       
-    class FormPage(Resource):
-        isLeaf = True
-        def render_OPTIONS(self,request):
-            request.setHeader('Access-Control-Allow-Origin','*')
-            request.setHeader('Access-Control-Allow-Methods','POST, GET, OPTIONS')
-            request.setHeader('Access-Control-Max-Age',1000)
-            request.setHeader('Access-Control-Allow-Headers','*')
-            request.finish()            
-            return NOT_DONE_YET    
-        
-        def render_POST(self, request):
-            return self.render_GET(request)
-        
-        def render_GET(self, request):
-            
-            request.setHeader('Content-Type','application/json')
-            request.setHeader('Access-Control','allow <*>')
-            request.setHeader('Access-Control-Allow-Origin','*')
-            
-            m = Maintainer()
-            m.request = request
-                        
-            m.getUserDataFromDatabase(request.args['code'][0],request.args['doi'][0])
-            
-            #
-            #
-                        
-            return NOT_DONE_YET
-    
-    #root = Resource()
-    #root.putChild("form", FormPage())
-    #factory = Site(root)
-    #reactor.listenTCP(8880, factory)
+                    print ("Mapping successful. Access mapping at URL below:")
+                    visualization_path = "file:///%s#%s"
+                    print (visualization_path % (os.path.abspath("../../example_map.html").replace("\\","/"), output_name))
+                    exit()
     
     m = Maintainer()
     m.start()
-    
     reactor.run()
-    #m.grapher()

@@ -3,6 +3,12 @@ Created on Jul 31, 2018
 
 @author: dbuschho
 '''
+START_PAPER = u"7ba400225356a7d389f04e13e2d2506f40774fc8" #u"dba56b1d8b91142cc772b04655797d0d0f2fc532"
+CORPUS_PATH = u"D:\\corpus\\"
+CORPUS_SQLLITE_PATH = u"D:\\corpus\\processed_data\\id_positions.sqlite3"
+TEMP_NODE_STORE = u"D:\\corpus\\processed_data\\tmp.json"
+MAX_LEVEL = 4
+
 import pickle
 import json
 
@@ -21,13 +27,8 @@ class S2SearchStrategy(object):
         
         self._cache = {}
         
-        self.generator = S2Generator(u'D:\corpus\downloads', 
-                                     u'D:\corpus\processed_data\id_positions.sqlite3')
-        
-        print ('started')
-        #self.core_node = self.generator.populateNodeFromCustomId(core_node_id)            
+        self.generator = S2Generator(CORPUS_PATH, CORPUS_SQLLITE_PATH)
         self.core_node_id = core_node_id
-        print ('finished')
     
     def _handlePopulateNodeFromCustomIdTimeout(self,customId):
         pass
@@ -79,13 +80,14 @@ class S2SearchStrategy(object):
             
             if(self.core_node is None):
                 self.core_node = node
+            if(self.core_authors is None):
+                self.core_node.authors[-1]
                 
         except Exception as e:
             print (e)   
             raise NameError("Couldn't successfully populateNodeFromCustomId: %s" % (node,))
-                    
+    
         parent.append(node)
-        
         try:
             d =  self.generator.findCitingNodes(node)
             citingworks = yield d
@@ -116,7 +118,7 @@ class S2SearchStrategy(object):
                     #print (parent)
                     parent.pop()
                 else:
-                    if(level<=4 and (node.id != paper.id)):
+                    if(level <= MAX_LEVEL and (node.id != paper.id)):
                         try:
                             d = self.subnodelookup(paper.id,level+1,parent[:])
                             d.addErrback(self._handleSearchTimeout)
@@ -135,7 +137,13 @@ class S2SearchStrategy(object):
         #print ("ending subnodes: %s" %(self._opennodes,))
         if(self._opennodes is 0):
             print ("search complete: %s" %(self.useful_paths,))
-            with open("D:\\corpus\\paths.json", "w", encoding="utf8") as f:
-                f.write("%s" %(self.useful_paths,))
+            with open(TEMP_NODE_STORE, "w+") as f:
+                outputs = []
+                for path in self.useful_paths:
+                    str_path = []
+                    for entry in path:
+                        str_path.append(entry.__repr__())
+                    outputs.append(str_path)
+                    
+                f.write("%s" %(json.dumps(outputs),))
             self.maintainer.stop()
-            reactor.stop()

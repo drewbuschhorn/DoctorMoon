@@ -3,7 +3,12 @@ Created on Jul 6, 2011
 
 @author: dbuschho
 '''
-import uuid, datetime, time, calendar, string, json
+START_PAPER = u"7ba400225356a7d389f04e13e2d2506f40774fc8" #u"dba56b1d8b91142cc772b04655797d0d0f2fc532"
+CORPUS_PATH = u"D:\\corpus\\"
+CORPUS_SQLLITE_PATH = u"D:\\corpus\\processed_data\\id_positions.sqlite3"
+TEMP_NODE_STORE = u"D:\\corpus\\processed_data\\tmp.json"
+
+import uuid, time, calendar, json
 from twisted.internet import reactor, threads, defer
 from twisted.enterprise import adbapi
 
@@ -20,7 +25,7 @@ class S2Generator(object):
         self.cursor = adbapi.ConnectionPool("sqlite3", position_database_path, check_same_thread=False, cp_max=1)        
         self.uuid = uuid.uuid4();
         self.results = dict()
-                
+             
     def _S2DocumentConstructor(self, **keywords):
         return S2Document(owningGenerator=self,**keywords)
     
@@ -28,18 +33,14 @@ class S2Generator(object):
         return {_S2doc.id:_S2doc}
 
     def onResult(self, data):
-        #data[0][0] # first row, first column
-        #print (data)
+        # data[0][0] # first row, first column
+        # data = [item][id, uuid, start_position_byte, start_position_file, in_citation_count, out_citation_count]
         try: 
             file = data[0][3]                
-            if file == '0':
-                file = 'D:\corpus\s2-corpus-00'
             with open(file, encoding='utf-8', errors='ignore') as f:
-                #print ("opening %s at %s" % (data[0][3], data[0][2]))
                 doc = S2Doc(self)
                 f.seek(data[0][2])
-                line = f.readline()
-                #print(line)
+                line = f.readline() # Seek S2 file to byte position then read full json record (1 per line)
                 json_data = json.loads(line)
                 doc.id = json_data['id']
                 doc.title = json_data['title']
@@ -48,6 +49,7 @@ class S2Generator(object):
                 doc.authors = []
                 doc.primaryAuthor = None
                 doc.author = None
+                doc.author_names = str(json_data['authors'])
                 for authors in json_data['authors']:
                     doc.authors.append(authors['ids'])
                     doc.primaryAuthor = doc.authors[-1]
@@ -56,7 +58,8 @@ class S2Generator(object):
                 if 'year' in json_data:
                     doc.datestamp = calendar.timegm(time.strptime("1 Jan " + str(json_data['year']), "%d %b %Y"))
                 else:
-                    print ("Skipping: " + json_data['id'])
+                    # Not all records have year values
+                    print ("No date info skipping: " + json_data['id'])
                     return doc
                 doc.publication_date = doc.datestamp
                 return doc
@@ -110,8 +113,7 @@ class S2Generator(object):
     
         defer.returnValue(results)
 
-            
-class S2Doc(object):  #Maybe switch to proxy object and duck-type
+class S2Doc(object):
     def __repr__(self):
         return self.id    
     def __str__(self):
@@ -125,8 +127,6 @@ class S2Doc(object):  #Maybe switch to proxy object and duck-type
         self.id = 1
         self.parentNodes = []
         self.childNodes = []
-
-
 
     def getNodeCitedWorksArray(self):
         return self.citedWorks

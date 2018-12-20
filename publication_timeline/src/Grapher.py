@@ -23,13 +23,9 @@ class Grapher(object):
                     y = 0
                 else:
                     y = item.path_index
-                    
-                
-                x = float(item.publication_date)
+                x = float(item.publication_date) # Let's find a sane position range
                 x =  (x - 700000)/10000
-                
                 pos.update({item:[x,y]})
-            
         return pos
 
     def addToGraph(self,node,all=True):
