@@ -6,3 +6,5 @@ build/*
 //.spyproject/*
 publication_timeline/src/*.json
 publication_timeline/src/data/*.json
+publication_timeline/data/corpus/s2-corpus-*
+publication_timeline/data/processed_data/*.sqlite3
