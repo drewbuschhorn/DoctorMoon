@@ -3,7 +3,7 @@
 example.log
 build/*
 *.db
-//.spyproject/*
+publication_timeline/.spyproject/**
 publication_timeline/src/*.json
 publication_timeline/src/data/*.json
 publication_timeline/data/corpus/s2-corpus-*
