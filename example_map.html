@@ -18,17 +18,37 @@
 <body>
 <style>
 .willnotrender { 
-   transform: translateZ(0); 
+  transform: translateZ(0); 
+}
+
+#chart {
+  outline: 1px solid black;
+  width: 800px; 
+  height: 600px; 
+  float: left;
+}
+#groups_table {
+  float: left; 
+  border: 1px solid black;
+}
+#groups_table tr {
+  vertical-align: top
+}
+#group_data {
+  max-width: 40em
+}
+.text_group_ids {
+  text-align: center;
 }
 </style>
-<div id="chart" style="outline: 1px solid black; width: 800px; height: 600px; float: left"></div>
+<div id="chart"></div>
 
 <div id="host"></div>
-<table style="float: left; border: 1px solid black">
-<tr style="vertical-align: top">
-<td id="groups_column"><div id="groups_column_text"></div></td>
-<td id="group_data" style="max-width: 40em"><div id="group_data_text"></div></td>
-</tr>
+<table id="groups_table">
+  <tr>
+    <td id="groups_column"><div id="groups_column_text"></div></td>
+    <td id="group_data"><div id="group_data_text"></div></td>
+  </tr>
 <table>
 <script>
     try {

@@ -2,12 +2,7 @@
 Created on Jul 6, 2011
 
 @author: dbuschho
-Y'''
-
-START_PAPER = u"7ba400225356a7d389f04e13e2d2506f40774fc8" #u"dba56b1d8b91142cc772b04655797d0d0f2fc532"
-CORPUS_PATH = u"D:\\corpus\\"
-CORPUS_SQLLITE_PATH = u"D:\\corpus\\processed_data\\id_positions.sqlite3"
-TEMP_NODE_STORE = u"D:\\corpus\\processed_data\\tmp.json"
+'''
 
 import sys, time, os
 sys.path.append('../libs/networkx')
@@ -16,36 +11,46 @@ from networkx.readwrite import d3_js
 import uuid
 import json as jsn
 
-from twisted.internet import reactor, threads
-from twisted.internet.task import deferLater
-from twisted.web.server import Site,NOT_DONE_YET
-from twisted.web.resource import Resource
-from twisted.internet import reactor, threads, defer
-from twisted.python.log import err
+from twisted.internet import reactor, defer
 
 
 from Grapher import Grapher
 from S2SearchStrategy import S2SearchStrategy
 from timeline_generator.generators.S2Generator import S2Generator
 
+# START_PAPER = u"7ba400225356a7d389f04e13e2d2506f40774fc8" #u"dba56b1d8b91142cc772b04655797d0d0f2fc532"
+
+
 if __name__ == '__main__':
     class Maintainer(object):
         def __init__(self):
             self.searcher = None
             self.uuid = uuid.uuid4()
+            self.CORPUS_PATH = os.path.abspath(u"..\\data\\") #three levels up
+            self.CORPUS_SQLLITE_PATH = self.CORPUS_PATH + u"\\processed_data\\id_positions.sqlite3"
+            self.TEMP_NODE_STORE = self.CORPUS_PATH + u"\\processed_data\\%s-temp.json"
+            self.MAX_LEVEL = 4
         
-        def start(self):#,params):
-            self.searcher = S2SearchStrategy(START_PAPER, self)
+        def start(self):
+            print (u"Enter starting S2 corpus paper id to analyze: [ 7ba400225356a7d389f04e13e2d2506f40774fc8 ]")
+            paper = u""
+            while len(paper) != 40:
+                paper = input()
+                if paper is "":
+                    paper = u"7ba400225356a7d389f04e13e2d2506f40774fc8"
+                    
+            self.searcher = S2SearchStrategy(paper, self)
+            self.TEMP_NODE_STORE = self.TEMP_NODE_STORE % (paper,)
             
             start = False
-            if os.path.isfile(TEMP_NODE_STORE):
-                print (u"Temp node store " + TEMP_NODE_STORE + u" exists.")
+            if os.path.isfile(self.TEMP_NODE_STORE):
+                print (u"Temp node store " + self.TEMP_NODE_STORE + u" exists.")
                 print (u"Do you want to purge it and start the search over again? [Y/N]")
-                removeFile = None
-                while removeFile is not 'Y' and removeFile is not 'N':
-                    removeFile = input() 
-                if removeFile is 'Y':
-                    os.remove(TEMP_NODE_STORE)
+                remove_file = None
+                while remove_file is not 'Y' and remove_file is not 'N':
+                    remove_file = input() 
+                if remove_file is 'Y':
+                    os.remove(self.TEMP_NODE_STORE)
                     start = True
             else:
                 start = True
@@ -63,21 +68,21 @@ if __name__ == '__main__':
         # subset = (start, end)
         def grapher(self, subset=None):
                 #First grab the data and cut it down to size
-                with open(TEMP_NODE_STORE, "r") as f:
+                with open(self.TEMP_NODE_STORE, "r") as f:
                     data = jsn.load(f)
                     if subset is not None:
                         data_subset = data[subset[0], subset[1]]
                     else:
                         data_subset = data
                 
-                generator = S2Generator(CORPUS_PATH,
-                                     CORPUS_SQLLITE_PATH)
+                generator = S2Generator(self.CORPUS_PATH,
+                                     self.CORPUS_SQLLITE_PATH)
                                     
                 real_networks = []
                 for network in data_subset: 
                     real_network = []
-                    for customId in network:
-                        node = yield generator.populateNodeFromCustomId(customId)
+                    for custom_id in network:
+                        node = yield generator.populateNodeFromCustomId(custom_id)
                         node.path_index = len(real_networks)
                         real_network.append(node)
                     real_networks.append(real_network)

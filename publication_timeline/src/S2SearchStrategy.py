@@ -3,13 +3,7 @@ Created on Jul 31, 2018
 
 @author: dbuschho
 '''
-START_PAPER = u"7ba400225356a7d389f04e13e2d2506f40774fc8" #u"dba56b1d8b91142cc772b04655797d0d0f2fc532"
-CORPUS_PATH = u"D:\\corpus\\"
-CORPUS_SQLLITE_PATH = u"D:\\corpus\\processed_data\\id_positions.sqlite3"
-TEMP_NODE_STORE = u"D:\\corpus\\processed_data\\tmp.json"
-MAX_LEVEL = 4
 
-import pickle
 import json
 
 from timeline_generator.generators.S2Generator import S2Generator
@@ -27,10 +21,10 @@ class S2SearchStrategy(object):
         
         self._cache = {}
         
-        self.generator = S2Generator(CORPUS_PATH, CORPUS_SQLLITE_PATH)
+        self.generator = S2Generator(maintainer.CORPUS_PATH, maintainer.CORPUS_SQLLITE_PATH)
         self.core_node_id = core_node_id
     
-    def _handlePopulateNodeFromCustomIdTimeout(self,customId):
+    def _handlePopulateNodeFromCustomIdTimeout(self, custom_id):
         pass
     
     @defer.inlineCallbacks
@@ -118,7 +112,7 @@ class S2SearchStrategy(object):
                     #print (parent)
                     parent.pop()
                 else:
-                    if(level <= MAX_LEVEL and (node.id != paper.id)):
+                    if(level <= self.maintainer.MAX_LEVEL and (node.id != paper.id)):
                         try:
                             d = self.subnodelookup(paper.id,level+1,parent[:])
                             d.addErrback(self._handleSearchTimeout)
@@ -137,7 +131,7 @@ class S2SearchStrategy(object):
         #print ("ending subnodes: %s" %(self._opennodes,))
         if(self._opennodes is 0):
             print ("search complete: %s" %(self.useful_paths,))
-            with open(TEMP_NODE_STORE, "w+") as f:
+            with open(self.maintainer.TEMP_NODE_STORE, "w+") as f:
                 outputs = []
                 for path in self.useful_paths:
                     str_path = []

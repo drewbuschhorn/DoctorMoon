@@ -3,13 +3,8 @@ Created on Jul 6, 2011
 
 @author: dbuschho
 '''
-START_PAPER = u"7ba400225356a7d389f04e13e2d2506f40774fc8" #u"dba56b1d8b91142cc772b04655797d0d0f2fc532"
-CORPUS_PATH = u"D:\\corpus\\"
-CORPUS_SQLLITE_PATH = u"D:\\corpus\\processed_data\\id_positions.sqlite3"
-TEMP_NODE_STORE = u"D:\\corpus\\processed_data\\tmp.json"
-
 import uuid, time, calendar, json
-from twisted.internet import reactor, threads, defer
+from twisted.internet import defer
 from twisted.enterprise import adbapi
 
 class S2Generator(object):
@@ -27,7 +22,7 @@ class S2Generator(object):
         self.results = dict()
              
     def _S2DocumentConstructor(self, **keywords):
-        return S2Document(owningGenerator=self,**keywords)
+        return S2Doc(owningGenerator=self, **keywords)
     
     def _S2DocumentHash(self, _S2doc):
         return {_S2doc.id:_S2doc}
@@ -36,7 +31,7 @@ class S2Generator(object):
         # data[0][0] # first row, first column
         # data = [item][id, uuid, start_position_byte, start_position_file, in_citation_count, out_citation_count]
         try: 
-            file = data[0][3]                
+            file = data[0][3]          
             with open(file, encoding='utf-8', errors='ignore') as f:
                 doc = S2Doc(self)
                 f.seek(data[0][2])
@@ -44,15 +39,15 @@ class S2Generator(object):
                 json_data = json.loads(line)
                 doc.id = json_data['id']
                 doc.title = json_data['title']
-                doc.citedWorks = json_data['outCitations']
-                doc.citingWorks = json_data['inCitations']
+                doc.cited_works = json_data['outCitations']
+                doc.citing_works = json_data['inCitations']
                 doc.authors = []
-                doc.primaryAuthor = None
+                doc.primary_author = None
                 doc.author = None
                 doc.author_names = str(json_data['authors'])
                 for authors in json_data['authors']:
                     doc.authors.append(authors['ids'])
-                    doc.primaryAuthor = doc.authors[-1]
+                    doc.primary_author = doc.authors[-1]
                     doc.author = doc.authors[-1]
                 doc.datestamp = None
                 if 'year' in json_data:
@@ -71,11 +66,11 @@ class S2Generator(object):
                 return None
     
     @defer.inlineCallbacks                
-    def populateNodeFromCustomId(self, customId, tries=0):            
-        if(customId in self.results):
-            defer.returnValue(self.results[customId])
+    def populateNodeFromCustomId(self, custom_id, tries=0):            
+        if(custom_id in self.results):
+            defer.returnValue(self.results[custom_id])
         
-        deferred = self.cursor.runQuery("SELECT * FROM positions WHERE uuid = ?", (customId,))
+        deferred = self.cursor.runQuery("SELECT * FROM positions WHERE uuid = ?", (custom_id,))
  
         deferred.addCallback(self.onResult)
         a = yield deferred
@@ -119,26 +114,26 @@ class S2Doc(object):
     def __str__(self):
         return self.id
     
-    def __init__ (self, owningGenerator=None, **keywords):
+    def __init__ (self, owning_generator=None, **keywords):
         for key in keywords:
             self.__setattr__(key, keywords[key])
-        self.owner = owningGenerator # Generator used to create this node
+        self.owner = owning_generator # Generator used to create this node
         self.uuid = uuid.uuid4()
         self.id = 1
         self.parentNodes = []
         self.childNodes = []
 
     def getNodeCitedWorksArray(self):
-        return self.citedWorks
+        return self.cited_works
     
     def getNodeCitingWorksArray(self):
-        return self.citingWorks
+        return self.citing_works
     
     def getNodeAuthorsArray(self):
         return self.authors
     
     def getNodePrimaryAuthor(self):
-        return self.primaryAuthor
+        return self.primary_author
     
     def getNodeUUID(self):
         return self.uuid
@@ -149,31 +144,31 @@ class S2Doc(object):
     def getNodeCustomId(self):
         return self.getNodeUUID
     
-    def addParentNode(self, newNode):
-        if (newNode is None) or (newNode.id == self.id):
+    def addParentNode(self, new_node):
+        if (new_node is None) or (new_node.id == self.id):
             return
         
         found = False
-        for parentNode in self.parentNodes:
-            if parentNode.id == newNode.id:
+        for parent_node in self.parentNodes:
+            if parent_node.id == new_node.id:
                 found = True
                 break
         
         if not found:
-            self.parentNodes.append(newNode)
+            self.parentNodes.append(new_node)
             
-    def addChildNode(self, newNode):
-        if (newNode is None) or (newNode.id == self.id):
+    def addChildNode(self, new_node):
+        if (new_node is None) or (new_node.id == self.id):
             return
         
         found = False
-        for childNode in self.childNodes:
-            if childNode.id == newNode.id:
+        for child_node in self.childNodes:
+            if child_node.id == new_node.id:
                 found = True
                 break
         
         if not found:
-            self.childNodes.append(newNode)
+            self.childNodes.append(new_node)
             
     def hasMatchingAuthorsName(self,core_authors):
         for core_author in core_authors:

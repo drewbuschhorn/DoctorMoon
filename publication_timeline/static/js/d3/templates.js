@@ -1,6 +1,7 @@
 function Templates(host) {
   this.nodeTable = 'nodeTable';
   this.nodeTableEntry = 'nodeTableEntry';
+  this.groupsTable = 'groups_table';
   this.groupsColumnTextId = 'groups_column_text';
   this.groupDataText = 'group_data_text';
   this.groupDataType = 'data-group';
@@ -31,19 +32,23 @@ Templates.prototype.tableTemplate = function(nodeList) {
 
 Templates.prototype.createGroupsList = function(json) {
     $('#' + this.groupsColumnTextId).empty();
+    
     json.all_groups.forEach((i)=>{
       var child = document.createElement('ol');
       child.setAttribute('class', this.textGroupIdsClass);
-      child.textContent = i;
       child.setAttribute(this.groupDataType, i);
+      child.textContent = i;
       $('#'+this.groupsColumnTextId).append(child);
     })
+    
     $('#'+this.groupsColumnTextId).show();
     $('.'+this.textGroupIdsClass).on('mouseover',function(e){
       var group = e.currentTarget.getAttribute(this.groupDataType)
         Grapher.prototype.highlightByGroup(json.links, group);
         this.createPapersList(group, json.nodes);
-      }.bind(this));
+        $('.'+this.textGroupIdsClass).css('color', 'lightgray').css('background-color', 'lightgray');
+        $(e.currentTarget).css('color', 'inherit').css('background-color', 'inherit');
+      }.bind(this));    
 }
 
 Templates.prototype.createPapersList = function(group, nodes) {
@@ -64,7 +69,7 @@ Templates.prototype.createPapersList = function(group, nodes) {
   var div = document.createElement('div');
   div.setAttribute('class', this.papersList);
   nodes.forEach((node)=>{
-  $(div).append(`<div class='${this.paperEntry}' style='margin: 5px 0px 5px 5px'>${node.key} - ${node.title} - ${new Date(node.publication_date * 1e3).toISOString().slice(0,10)} - ${node.authors}</div>`);
+    $(div).append(`<div class='${this.paperEntry}' style='margin: 5px 0px 5px 5px'>${node.key} - ${node.title} - ${new Date(node.publication_date * 1e3).toISOString().slice(0,10)} - ${node.authors}</div><hr>`);
   });
   $('#'+this.groupDataText).append(div);
 }
