@@ -3,243 +3,128 @@ Created on Jul 6, 2011
 
 @author: dbuschho
 '''
-import networkx as nx
-import cgi
-import StringIO
-import uuid
 
-from twisted.internet import reactor, threads
- 
-from twisted.internet.task import deferLater
-from twisted.web.server import Site,NOT_DONE_YET
-from twisted.web.resource import Resource
-from twisted.python.log import err
+import sys, time, os
+sys.path.append('../libs/networkx')
+import networkx
+from networkx.readwrite import d3_js
+import uuid
+import json as jsn
+
+from twisted.internet import reactor, defer
 
 
 from Grapher import Grapher
-from PlosSearchStrategy import PlosSearchStrategy
-from timeline_generator.generators.PlosGenerator import PlosGenerator
+from S2SearchStrategy import S2SearchStrategy
+from timeline_generator.generators.S2Generator import S2Generator
+
+# START_PAPER = u"7ba400225356a7d389f04e13e2d2506f40774fc8" #u"dba56b1d8b91142cc772b04655797d0d0f2fc532"
+
 
 if __name__ == '__main__':
-    
-    import logging
-    logging.basicConfig(filename='example.log', filemode='w', level=logging.DEBUG)
-    
     class Maintainer(object):
         def __init__(self):
             self.searcher = None
             self.uuid = uuid.uuid4()
+            self.CORPUS_PATH = os.path.abspath(u"..\\data\\") #three levels up
+            self.CORPUS_SQLLITE_PATH = self.CORPUS_PATH + u"\\processed_data\\id_positions.sqlite3"
+            self.TEMP_NODE_STORE = self.CORPUS_PATH + u"\\processed_data\\%s-temp.json"
+            self.MAX_LEVEL = 4
         
-        def start(self,params):
-            #p = PlosGenerator(u'AVWZBXMiftO65ug')
-            #d = p.populateNodeFromCustomId('10.1371/journal.pmed.0020124')        
-            self.searcher = PlosSearchStrategy(params['entry_id'],self)
-            start = self.searcher.start() 
-            start.addCallback(self._send,params = params)
-            self.params = params
+        def start(self):
+            print (u"Enter starting S2 corpus paper id to analyze: [ 7ba400225356a7d389f04e13e2d2506f40774fc8 ]")
+            paper = u""
+            while len(paper) != 40:
+                paper = input()
+                if paper is "":
+                    paper = u"7ba400225356a7d389f04e13e2d2506f40774fc8"
+                    
+            self.searcher = S2SearchStrategy(paper, self)
+            self.TEMP_NODE_STORE = self.TEMP_NODE_STORE % (paper,)
+            
+            start = False
+            if os.path.isfile(self.TEMP_NODE_STORE):
+                print (u"Temp node store " + self.TEMP_NODE_STORE + u" exists.")
+                print (u"Do you want to purge it and start the search over again? [Y/N]")
+                remove_file = None
+                while remove_file is not 'Y' and remove_file is not 'N':
+                    remove_file = input() 
+                if remove_file is 'Y':
+                    os.remove(self.TEMP_NODE_STORE)
+                    start = True
+            else:
+                start = True
+            
+            if start:
+                self.searcher.start()
+            else:
+                self.grapher()
         
         def stop(self):
-            print "ending: %s" %(self.searcher._opennodes,)
+            print ("ending: %s" %(self.searcher._opennodes,))
             self.grapher()
-            #reactor.stop()
         
-        def grapher(self):
-                print "results length : %s",(len(self.searcher.generator.results), )
+        @defer.inlineCallbacks 
+        # subset = (start, end)
+        def grapher(self, subset=None):
+                #First grab the data and cut it down to size
+                with open(self.TEMP_NODE_STORE, "r") as f:
+                    data = jsn.load(f)
+                    if subset is not None:
+                        data_subset = data[subset[0], subset[1]]
+                    else:
+                        data_subset = data
+                
+                generator = S2Generator(self.CORPUS_PATH,
+                                     self.CORPUS_SQLLITE_PATH)
+                                    
+                real_networks = []
+                for network in data_subset: 
+                    real_network = []
+                    for custom_id in network:
+                        node = yield generator.populateNodeFromCustomId(custom_id)
+                        node.path_index = len(real_networks)
+                        real_network.append(node)
+                    real_networks.append(real_network)
                 
                 grapher = Grapher()
-    
-                newg = nx.Graph()
-                for path in self.searcher.useful_paths:
-                    print '%s - %s' % (self.uuid,path)
+                newg = networkx.Graph()
+                
+                all_nodes = set()
+                for i in real_networks:
+                    for j in i:
+                        all_nodes = all_nodes.union(set([j.id]))
+                
+                node_to_vocab = dict()
+                vocab_to_node = dict()
+                for i in all_nodes:
+                    node_to_vocab[i] = len(node_to_vocab)
+                    vocab_to_node[len(vocab_to_node)] = i
+                
+                for path in real_networks:
                     newg.add_path(path)
                     grapher.paths.append(path)
                 
-                
                 grapher.graph = newg
-                #writer = nx.readwrite.graphml.GraphMLWriter(encoding='utf-8')
-                #writer.add_graph_element(grapher.graph)
-                #output = StringIO.StringIO()
-                #writer.dump(self.request)
-                
-                from networkx.readwrite import d3_js
-                
-                # mikedewar = nx.read_graphml('mikedewar_rec.graphml')
                 mikedewar = newg
                 
-                # We need to relabel nodes as Twitter name if we want to show the names in the plot
-                #def gen_label(node):
-                #    label = ""
-                #    label = "%s::%s::%s::%d" %(node.path_index,node.publication_date.absdate,node.id,node.hasMatchingAuthorsName(self.searcher.core_authors()))
-                #    print label
-                #    return label
-                    
-                #label_dict = dict(map(lambda i : (mikedewar.nodes()[i], gen_label(mikedewar.nodes()[i])), xrange(mikedewar.number_of_nodes())))
-                #mikedewar_d3 = nx.relabel_nodes(mikedewar, label_dict)    
-                
-                # Export 
-                #d3_js.export_d3_js(mikedewar_d3, files_dir="mikedewar", graphname="mikedewar", group=None)                
                 graph_json = d3_js.d3_json(mikedewar, group=None, searcher=self.searcher)
                 
-                import json
-                #self.request.write(json.dumps(graph_json, indent=2))
-                params = self.params
-                params['network_graph'] = json.dumps(graph_json, indent=2)
-                self.updateDatabase(params)
+                if self.searcher.core_node is None:
+                    self.searcher.core_node = yield generator.populateNodeFromCustomId(self.searcher.core_node_id)
+                if graph_json['links'] is None or graph_json['nodes'] is None:
+                    print ("Mapping failed")
+                    exit()
                 
-                #self.request.finish()
-                #output.close()
-                #grapher.render(self.searcher,self.searcher.core_node)
+                output_name = self.searcher.core_node_id + "_" +  str(int(time.time())) + ".json"
+                with open('data/' + output_name, 'w+') as outputfile:
+                    outputfile.write("var timelineData = ") # Just to make life easier for everyone
+                    jsn.dump({'nodes':list(graph_json['nodes']), 'links':graph_json['links']}, outputfile, indent=2)
+                    print ("Mapping successful. Access mapping at URL below:")
+                    visualization_path = "file:///%s#%s"
+                    print (visualization_path % (os.path.abspath("../../example_map.html").replace("\\","/"), output_name))
+                    exit()
     
-    
-        def _send(self,result,params):
-            #self.send("Run finished","Run finished", "dbuschho@localhost",[params['dbResult'][0][1]])
-    	    pass
-
-        def send(self,message=None, subject=None, sender=None, recipients=None, host=None):
-            """
-            Send email to one or more addresses.
-            """
-            from email.mime.text import MIMEText
-            from twisted.python import log
-
-            import warnings
-            warnings.filterwarnings('ignore','.*MimeWriter*.',DeprecationWarning,'twisted' )            
-            from twisted.mail.smtp import sendmail
-
-
-            message = 'This is the message body'
-            subject = 'This is the message subject'
-            
-            host = 'localhost'
-            sender = 'dbuschho'
-        
-            msg = MIMEText(message)
-            msg['Subject'] = subject
-            msg['From'] = sender
-            msg['To'] = ', '.join(recipients)
-        
-            dfr = sendmail(host, sender, recipients, msg.as_string())
-            def success(r):
-                return
-            def error(e):
-                print "error:115"
-                print e
-            dfr.addCallback(success)
-            dfr.addErrback(error)
-            
-    
-        def getUserDataFromDatabase(self,code,entry_id):
-            from twisted.enterprise import adbapi
-            
-            try:
-                dbpool = adbapi.ConnectionPool("psycopg2", 
-                                database='drmoon', user='postgres', password='django13', host='localhost', port='5432')            
-                result = dbpool.runQuery("SELECT auth_user.id,auth_user.email from auth_user LEFT JOIN drmoon_userprofile ON drmoon_userprofile.user_id = auth_user.id WHERE drmoon_userprofile.request_code = %s ",(code,))
-                 
-                result.addCallback(self.createNewNetworkEntry,code=code,entry_id=entry_id)
-                result.addErrback(self.printresult)
-                #result.addErrback
-            except Exception as e:
-                print e
-            
-            return result
-        
-        def createNewNetworkEntry(self,dbResult,code,entry_id):
-            from twisted.enterprise import adbapi
-            dbpool = adbapi.ConnectionPool("psycopg2", 
-                            database='drmoon', user='postgres', password='django13', host='localhost', port='5432')            
-            
-            result = dbpool.runInteraction(self._createNewNetworkEntry,dbResult=dbResult,code=entry_id)
-            result.addCallback(self._handleStartActions,entry_id=entry_id,dbResult=dbResult,code=entry_id)
-            result.addErrback(self.printresult)
-        
-        def _createNewNetworkEntry(self,txn,dbResult,code):
-            user_id = dbResult[0][0]
-
-            txn.execute("INSERT INTO drmoon_networkgraph( \
-                user_id, created, modified, unique_id, graph_data, shared, complete) \
-                VALUES (%s, NOW(), NOW(), %s, %s ,false,false)",(user_id,code,' '))
-            
-            txn.execute("SELECT lastval()")
-            result = txn.fetchall()
-            return result[0][0]
-
-        def _handleStartActions(self,result,entry_id,dbResult,code):
-            params = {'entry_id':entry_id,'dbResult':dbResult,'code':code,'id':result}
-            self.start(params)
-            
-            import json
-            self.request.write(json.dumps(params))
-            
-            self.request.finish()
-
-        def updateDatabase(self,params):
-            # Using the "dbmodule" from the previous example, create a ConnectionPool 
-            from twisted.enterprise import adbapi
-            dbpool = adbapi.ConnectionPool("psycopg2", 
-                            database='drmoon', user='postgres', password='django13', host='localhost', port='5432')            
-            
-            # equivalent of cursor.execute(statement), return cursor.fetchall():
-            dbpool.runInteraction(self._updateDatabase,params)
-            
-        def _updateDatabase(self,txn,params):
-	    print "--params--"
-            print params
-            id = params['id']
-                
-            txn.execute(
-                "SELECT id FROM drmoon_networkgraph WHERE id = %s",
-                (id,)
-            )
-            
-            result = txn.fetchone()                
-            print result
-            
-            if(result):
-                txn.execute(
-                    "UPDATE drmoon_networkgraph SET unique_id = %s, graph_data = %s, complete = %s WHERE id = %s",
-                    (params['entry_id'],params['network_graph'], True, id)
-                )
-            else:
-                raise Exception("Database Exception")
-        
-        def printresult(self,x):
-                print x
-                return x
-                       
-    class FormPage(Resource):
-        isLeaf = True
-        def render_OPTIONS(self,request):
-            request.setHeader('Access-Control-Allow-Origin','*')
-            request.setHeader('Access-Control-Allow-Methods','POST, GET, OPTIONS')
-            request.setHeader('Access-Control-Max-Age',1000)
-            request.setHeader('Access-Control-Allow-Headers','*')
-            request.finish()            
-            return NOT_DONE_YET    
-        
-        def render_POST(self, request):
-            return self.render_GET(request)
-        
-        def render_GET(self, request):
-            
-            request.setHeader('Content-Type','application/json')
-            request.setHeader('Access-Control','allow <*>')
-            request.setHeader('Access-Control-Allow-Origin','*')
-            
-            m = Maintainer()
-            m.request = request
-                        
-            m.getUserDataFromDatabase(request.args['code'][0],request.args['doi'][0])
-            
-            #
-            #
-                        
-            return NOT_DONE_YET
-    
-    root = Resource()
-    root.putChild("form", FormPage())
-    factory = Site(root)
-    reactor.listenTCP(8880, factory)
-    
+    m = Maintainer()
+    m.start()
     reactor.run()
-    #m.grapher()

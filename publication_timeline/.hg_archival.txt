@@ -1,5 +1,0 @@
-repo: 6c5eabe6710c66807ad10f2cc344d23c678f1fdf
-node: 30935e5c3559e7f462861f87c40dd6259d6b7418
-branch: Converting_to_reactor
-latesttag: null
-latesttagdistance: 77
