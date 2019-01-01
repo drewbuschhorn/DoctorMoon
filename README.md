@@ -9,7 +9,7 @@ then processing those papers' in-out references for some N depth, and then pruni
 This creates a connected cycle of important papers related to the starting paper, as shown by in the original authors' citation behavior.
 
 ## Screenshots
-Try live map here: http://drewbuschhorn.github.io/DoctorMoon/example_map.html
+Try live map here: http://drewbuschhorn.github.io/DoctorMoon/example_map.html (for paper https://www.ncbi.nlm.nih.gov/pubmed/17925537 S2 Corpus Id: 7ba400225356a7d389f04e13e2d2506f40774fc8)
 
 ![screenshot1](https://raw.githubusercontent.com/drewbuschhorn/DoctorMoon/gh-pages/Capture2.PNG)
 
