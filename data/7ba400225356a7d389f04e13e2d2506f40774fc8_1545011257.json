@@ -1,0 +1,374 @@
+var timelineData = {
+  "nodes": [
+    {
+      "name": "7::757382400::fbeb5d316e9452badbe8690f7b915217295e74fe::1",
+      "group": 7,
+      "doi": "fbeb5d316e9452badbe8690f7b915217295e74fe",
+      "publication_date": 757382400,
+      "path_index": 7,
+      "is_original_author": "true",
+      "title": "Bladder tumor staging: comparison of contrast-enhanced CT, T1- and T2-weighted MR imaging, dynamic gadolinium-enhanced imaging, and late gadolinium-enhanced imaging.",
+      "index": 0
+    },
+    {
+      "name": "0::820454400::4e2d08257744a6635b304431adb4c2d2f3c46b16::1",
+      "group": 0,
+      "doi": "4e2d08257744a6635b304431adb4c2d2f3c46b16",
+      "publication_date": 820454400,
+      "path_index": 0,
+      "is_original_author": "true",
+      "title": "The CaPSURE database: a methodology for clinical practice and research in prostate cancer. CaPSURE Research Panel. Cancer of the Prostate Strategic Urologic Research Endeavor.",
+      "index": 1
+    },
+    {
+      "name": "3::820454400::4e2d08257744a6635b304431adb4c2d2f3c46b16::1",
+      "group": 3,
+      "doi": "4e2d08257744a6635b304431adb4c2d2f3c46b16",
+      "publication_date": 820454400,
+      "path_index": 3,
+      "is_original_author": "true",
+      "title": "The CaPSURE database: a methodology for clinical practice and research in prostate cancer. CaPSURE Research Panel. Cancer of the Prostate Strategic Urologic Research Endeavor.",
+      "index": 2
+    },
+    {
+      "name": "7::820454400::2c0732a9648798308c0c2ee3e89093d487f3bdbc::0",
+      "group": 7,
+      "doi": "2c0732a9648798308c0c2ee3e89093d487f3bdbc",
+      "publication_date": 820454400,
+      "path_index": 7,
+      "is_original_author": "false",
+      "title": "Primary staging of urinary bladder carcinoma: the role of MRI and a comparison with CT",
+      "index": 3
+    },
+    {
+      "name": "6::883612800::c611d0f3f30ff635ed69a7cfd804ab03f7953b50::1",
+      "group": 6,
+      "doi": "c611d0f3f30ff635ed69a7cfd804ab03f7953b50",
+      "publication_date": 883612800,
+      "path_index": 6,
+      "is_original_author": "true",
+      "title": "Differences in urologist and patient assessments of health related quality of life in men with prostate cancer: results of the CaPSURE database.",
+      "index": 4
+    },
+    {
+      "name": "6::946684800::bbbce27685f31ab6934407f28e4065e05a079744::0",
+      "group": 6,
+      "doi": "bbbce27685f31ab6934407f28e4065e05a079744",
+      "publication_date": 946684800,
+      "path_index": 6,
+      "is_original_author": "false",
+      "title": "Urinary and sexual function after radical prostatectomy for clinically localized prostate cancer: the Prostate Cancer Outcomes Study.",
+      "index": 5
+    },
+    {
+      "name": "6::978307200::c0ee3723e0ad6d3dbeb04289e088f6ea89a1512f::0",
+      "group": 6,
+      "doi": "c0ee3723e0ad6d3dbeb04289e088f6ea89a1512f",
+      "publication_date": 978307200,
+      "path_index": 6,
+      "is_original_author": "false",
+      "title": "Factors associated with initial therapy for clinically localized prostate cancer: prostate cancer outcomes study.",
+      "index": 6
+    },
+    {
+      "name": "4::1009843200::3be6ccbc2e725cddedd36a45557a5dd78daf7d4b::1",
+      "group": 4,
+      "doi": "3be6ccbc2e725cddedd36a45557a5dd78daf7d4b",
+      "publication_date": 1009843200,
+      "path_index": 4,
+      "is_original_author": "true",
+      "title": "Contemporary patterns of androgen deprivation therapy use for newly diagnosed prostate cancer.",
+      "index": 7
+    },
+    {
+      "name": "7::1009843200::5cb7cdc4784d390ba3d102c0cbe864de712c262d::0",
+      "group": 7,
+      "doi": "5cb7cdc4784d390ba3d102c0cbe864de712c262d",
+      "publication_date": 1009843200,
+      "path_index": 7,
+      "is_original_author": "false",
+      "title": "AJCC Cancer Staging Manual",
+      "index": 8
+    },
+    {
+      "name": "5::1041379200::7d35c7145568c5a621e41ce94e6958903fd2bd08::1",
+      "group": 5,
+      "doi": "7d35c7145568c5a621e41ce94e6958903fd2bd08",
+      "publication_date": 1041379200,
+      "path_index": 5,
+      "is_original_author": "true",
+      "title": "National practice patterns and time trends in androgen ablation for localized prostate cancer.",
+      "index": 9
+    },
+    {
+      "name": "2::1072915200::fd2d2948831a8995679a781903d4f8e2038cce89::1",
+      "group": 2,
+      "doi": "fd2d2948831a8995679a781903d4f8e2038cce89",
+      "publication_date": 1072915200,
+      "path_index": 2,
+      "is_original_author": "true",
+      "title": "The changing face of low-risk prostate cancer: trends in clinical presentation and primary management.",
+      "index": 10
+    },
+    {
+      "name": "1::1104537600::e2dd59400d00756b42a56bc5a6c09d40558720a2::1",
+      "group": 1,
+      "doi": "e2dd59400d00756b42a56bc5a6c09d40558720a2",
+      "publication_date": 1104537600,
+      "path_index": 1,
+      "is_original_author": "true",
+      "title": "Treatment of patients with high risk localized prostate cancer: results from cancer of the prostate strategic urological research endeavor (CaPSURE).",
+      "index": 11
+    },
+    {
+      "name": "2::1104537600::faf5a0517b9c44822a54ce1889c9384da7c00304::0",
+      "group": 2,
+      "doi": "faf5a0517b9c44822a54ce1889c9384da7c00304",
+      "publication_date": 1104537600,
+      "path_index": 2,
+      "is_original_author": "false",
+      "title": "Impact of short course hormonal therapy on overall and cancer specific survival after permanent prostate brachytherapy.",
+      "index": 12
+    },
+    {
+      "name": "3::1104537600::512e8a614a48a8c107f3c6ba594e8b4aab9e3ddb::0",
+      "group": 3,
+      "doi": "512e8a614a48a8c107f3c6ba594e8b4aab9e3ddb",
+      "publication_date": 1104537600,
+      "path_index": 3,
+      "is_original_author": "false",
+      "title": "Increasing use of gonadotropin-releasing hormone agonists for the treatment of localized prostate carcinoma.",
+      "index": 13
+    },
+    {
+      "name": "4::1104537600::512e8a614a48a8c107f3c6ba594e8b4aab9e3ddb::0",
+      "group": 4,
+      "doi": "512e8a614a48a8c107f3c6ba594e8b4aab9e3ddb",
+      "publication_date": 1104537600,
+      "path_index": 4,
+      "is_original_author": "false",
+      "title": "Increasing use of gonadotropin-releasing hormone agonists for the treatment of localized prostate carcinoma.",
+      "index": 14
+    },
+    {
+      "name": "5::1104537600::512e8a614a48a8c107f3c6ba594e8b4aab9e3ddb::0",
+      "group": 5,
+      "doi": "512e8a614a48a8c107f3c6ba594e8b4aab9e3ddb",
+      "publication_date": 1104537600,
+      "path_index": 5,
+      "is_original_author": "false",
+      "title": "Increasing use of gonadotropin-releasing hormone agonists for the treatment of localized prostate carcinoma.",
+      "index": 15
+    },
+    {
+      "name": "6::1104537600::512e8a614a48a8c107f3c6ba594e8b4aab9e3ddb::0",
+      "group": 6,
+      "doi": "512e8a614a48a8c107f3c6ba594e8b4aab9e3ddb",
+      "publication_date": 1104537600,
+      "path_index": 6,
+      "is_original_author": "false",
+      "title": "Increasing use of gonadotropin-releasing hormone agonists for the treatment of localized prostate carcinoma.",
+      "index": 16
+    },
+    {
+      "name": "7::1104537600::512e8a614a48a8c107f3c6ba594e8b4aab9e3ddb::0",
+      "group": 7,
+      "doi": "512e8a614a48a8c107f3c6ba594e8b4aab9e3ddb",
+      "publication_date": 1104537600,
+      "path_index": 7,
+      "is_original_author": "false",
+      "title": "Increasing use of gonadotropin-releasing hormone agonists for the treatment of localized prostate carcinoma.",
+      "index": 17
+    },
+    {
+      "name": "0::1167609600::7ba400225356a7d389f04e13e2d2506f40774fc8::1",
+      "group": 0,
+      "doi": "7ba400225356a7d389f04e13e2d2506f40774fc8",
+      "publication_date": 1167609600,
+      "path_index": 0,
+      "is_original_author": "true",
+      "title": "Androgen deprivation therapy for localized prostate cancer and the risk of cardiovascular mortality.",
+      "index": 18
+    },
+    {
+      "name": "1::1167609600::7ba400225356a7d389f04e13e2d2506f40774fc8::1",
+      "group": 1,
+      "doi": "7ba400225356a7d389f04e13e2d2506f40774fc8",
+      "publication_date": 1167609600,
+      "path_index": 1,
+      "is_original_author": "true",
+      "title": "Androgen deprivation therapy for localized prostate cancer and the risk of cardiovascular mortality.",
+      "index": 19
+    },
+    {
+      "name": "2::1167609600::7ba400225356a7d389f04e13e2d2506f40774fc8::1",
+      "group": 2,
+      "doi": "7ba400225356a7d389f04e13e2d2506f40774fc8",
+      "publication_date": 1167609600,
+      "path_index": 2,
+      "is_original_author": "true",
+      "title": "Androgen deprivation therapy for localized prostate cancer and the risk of cardiovascular mortality.",
+      "index": 20
+    },
+    {
+      "name": "3::1167609600::7ba400225356a7d389f04e13e2d2506f40774fc8::1",
+      "group": 3,
+      "doi": "7ba400225356a7d389f04e13e2d2506f40774fc8",
+      "publication_date": 1167609600,
+      "path_index": 3,
+      "is_original_author": "true",
+      "title": "Androgen deprivation therapy for localized prostate cancer and the risk of cardiovascular mortality.",
+      "index": 21
+    },
+    {
+      "name": "4::1167609600::7ba400225356a7d389f04e13e2d2506f40774fc8::1",
+      "group": 4,
+      "doi": "7ba400225356a7d389f04e13e2d2506f40774fc8",
+      "publication_date": 1167609600,
+      "path_index": 4,
+      "is_original_author": "true",
+      "title": "Androgen deprivation therapy for localized prostate cancer and the risk of cardiovascular mortality.",
+      "index": 22
+    },
+    {
+      "name": "5::1167609600::7ba400225356a7d389f04e13e2d2506f40774fc8::1",
+      "group": 5,
+      "doi": "7ba400225356a7d389f04e13e2d2506f40774fc8",
+      "publication_date": 1167609600,
+      "path_index": 5,
+      "is_original_author": "true",
+      "title": "Androgen deprivation therapy for localized prostate cancer and the risk of cardiovascular mortality.",
+      "index": 23
+    },
+    {
+      "name": "6::1167609600::7ba400225356a7d389f04e13e2d2506f40774fc8::1",
+      "group": 6,
+      "doi": "7ba400225356a7d389f04e13e2d2506f40774fc8",
+      "publication_date": 1167609600,
+      "path_index": 6,
+      "is_original_author": "true",
+      "title": "Androgen deprivation therapy for localized prostate cancer and the risk of cardiovascular mortality.",
+      "index": 24
+    },
+    {
+      "name": "7::1167609600::7ba400225356a7d389f04e13e2d2506f40774fc8::1",
+      "group": 7,
+      "doi": "7ba400225356a7d389f04e13e2d2506f40774fc8",
+      "publication_date": 1167609600,
+      "path_index": 7,
+      "is_original_author": "true",
+      "title": "Androgen deprivation therapy for localized prostate cancer and the risk of cardiovascular mortality.",
+      "index": 25
+    }
+  ],
+  "links": [
+    {
+      "source": 18,
+      "target": 1,
+      "value": 1,
+      "index": 0
+    },
+    {
+      "source": 19,
+      "target": 11,
+      "value": 1,
+      "index": 1
+    },
+    {
+      "source": 20,
+      "target": 12,
+      "value": 1,
+      "index": 2
+    },
+    {
+      "source": 12,
+      "target": 10,
+      "value": 1,
+      "index": 3
+    },
+    {
+      "source": 21,
+      "target": 13,
+      "value": 1,
+      "index": 4
+    },
+    {
+      "source": 13,
+      "target": 2,
+      "value": 1,
+      "index": 5
+    },
+    {
+      "source": 22,
+      "target": 14,
+      "value": 1,
+      "index": 6
+    },
+    {
+      "source": 14,
+      "target": 7,
+      "value": 1,
+      "index": 7
+    },
+    {
+      "source": 23,
+      "target": 15,
+      "value": 1,
+      "index": 8
+    },
+    {
+      "source": 15,
+      "target": 9,
+      "value": 1,
+      "index": 9
+    },
+    {
+      "source": 24,
+      "target": 16,
+      "value": 1,
+      "index": 10
+    },
+    {
+      "source": 16,
+      "target": 6,
+      "value": 1,
+      "index": 11
+    },
+    {
+      "source": 6,
+      "target": 5,
+      "value": 1,
+      "index": 12
+    },
+    {
+      "source": 5,
+      "target": 4,
+      "value": 1,
+      "index": 13
+    },
+    {
+      "source": 25,
+      "target": 17,
+      "value": 1,
+      "index": 14
+    },
+    {
+      "source": 17,
+      "target": 8,
+      "value": 1,
+      "index": 15
+    },
+    {
+      "source": 8,
+      "target": 3,
+      "value": 1,
+      "index": 16
+    },
+    {
+      "source": 3,
+      "target": 0,
+      "value": 1,
+      "index": 17
+    }
+  ]
+}

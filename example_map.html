@@ -1,0 +1,457 @@
+<html>
+<head>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/drewbuschhorn/DoctorMoon/publication_timeline/static/js/d3/d3.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  <script>
+var timelineData = {
+  "nodes": [
+    {
+      "name": "7::757382400::fbeb5d316e9452badbe8690f7b915217295e74fe::1",
+      "group": 7,
+      "doi": "fbeb5d316e9452badbe8690f7b915217295e74fe",
+      "publication_date": 757382400,
+      "path_index": 7,
+      "authors": "[{'name': 'B Kim', 'ids': ['1732955']}, {'name': 'R C Semelka', 'ids': ['5703032']}, {'name': 'S M Ascher', 'ids': ['5005067']}, {'name': 'D B Chalpin', 'ids': ['14296807']}, {'name': 'P R Carroll', 'ids': ['1812633']}, {'name': 'H Hricak', 'ids': ['5720426']}]",
+      "is_original_author": "true",
+      "title": "Bladder tumor staging: comparison of contrast-enhanced CT, T1- and T2-weighted MR imaging, dynamic gadolinium-enhanced imaging, and late gadolinium-enhanced imaging.",
+      "index": 0
+    },
+    {
+      "name": "0::820454400::4e2d08257744a6635b304431adb4c2d2f3c46b16::1",
+      "group": 0,
+      "doi": "4e2d08257744a6635b304431adb4c2d2f3c46b16",
+      "publication_date": 820454400,
+      "path_index": 0,
+      "authors": "[{'name': 'D P Lubeck', 'ids': ['40577156']}, {'name': 'M S Litwin', 'ids': ['28994152']}, {'name': 'J M Henning', 'ids': ['38359371']}, {'name': 'D M Stier', 'ids': ['6027167']}, {'name': 'P Mazonson', 'ids': ['7767571']}, {'name': 'R Fisk', 'ids': ['16619050']}, {'name': 'P R Carroll', 'ids': ['1812633']}]",
+      "is_original_author": "true",
+      "title": "The CaPSURE database: a methodology for clinical practice and research in prostate cancer. CaPSURE Research Panel. Cancer of the Prostate Strategic Urologic Research Endeavor.",
+      "index": 1
+    },
+    {
+      "name": "3::820454400::4e2d08257744a6635b304431adb4c2d2f3c46b16::1",
+      "group": 3,
+      "doi": "4e2d08257744a6635b304431adb4c2d2f3c46b16",
+      "publication_date": 820454400,
+      "path_index": 3,
+      "authors": "[{'name': 'D P Lubeck', 'ids': ['40577156']}, {'name': 'M S Litwin', 'ids': ['28994152']}, {'name': 'J M Henning', 'ids': ['38359371']}, {'name': 'D M Stier', 'ids': ['6027167']}, {'name': 'P Mazonson', 'ids': ['7767571']}, {'name': 'R Fisk', 'ids': ['16619050']}, {'name': 'P R Carroll', 'ids': ['1812633']}]",
+      "is_original_author": "true",
+      "title": "The CaPSURE database: a methodology for clinical practice and research in prostate cancer. CaPSURE Research Panel. Cancer of the Prostate Strategic Urologic Research Endeavor.",
+      "index": 2
+    },
+    {
+      "name": "7::820454400::2c0732a9648798308c0c2ee3e89093d487f3bdbc::0",
+      "group": 7,
+      "doi": "2c0732a9648798308c0c2ee3e89093d487f3bdbc",
+      "publication_date": 820454400,
+      "path_index": 7,
+      "authors": "[{'name': 'J. O. Barentsz', 'ids': ['2513290']}, {'name': 'G. J. Jager', 'ids': ['2366280']}, {'name': 'J. A. Witjes', 'ids': ['15786056']}, {'name': 'J. H. J. Ruijs', 'ids': ['10168783']}]",
+      "is_original_author": "false",
+      "title": "Primary staging of urinary bladder carcinoma: the role of MRI and a comparison with CT",
+      "index": 3
+    },
+    {
+      "name": "6::883612800::c611d0f3f30ff635ed69a7cfd804ab03f7953b50::1",
+      "group": 6,
+      "doi": "c611d0f3f30ff635ed69a7cfd804ab03f7953b50",
+      "publication_date": 883612800,
+      "path_index": 6,
+      "authors": "[{'name': 'M S Litwin', 'ids': ['28994152']}, {'name': 'D P Lubeck', 'ids': ['40577156']}, {'name': 'J M Henning', 'ids': ['38359371']}, {'name': 'P R Carroll', 'ids': ['1812633']}]",
+      "is_original_author": "true",
+      "title": "Differences in urologist and patient assessments of health related quality of life in men with prostate cancer: results of the CaPSURE database.",
+      "index": 4
+    },
+    {
+      "name": "6::946684800::bbbce27685f31ab6934407f28e4065e05a079744::0",
+      "group": 6,
+      "doi": "bbbce27685f31ab6934407f28e4065e05a079744",
+      "publication_date": 946684800,
+      "path_index": 6,
+      "authors": "[{'name': 'J L Stanford', 'ids': ['5774494']}, {'name': 'Z Feng', 'ids': ['1805587']}, {'name': 'A S Hamilton', 'ids': ['2999306']}, {'name': 'F D Gilliland', 'ids': ['4841955']}, {'name': 'R A Stephenson', 'ids': ['6729001']}, {'name': 'J W Eley', 'ids': ['4088074']}, {'name': 'P C Albertsen', 'ids': ['9516041']}, {'name': 'L C Harlan', 'ids': ['4203049']}, {'name': 'A L Potosky', 'ids': ['6697307']}]",
+      "is_original_author": "false",
+      "title": "Urinary and sexual function after radical prostatectomy for clinically localized prostate cancer: the Prostate Cancer Outcomes Study.",
+      "index": 5
+    },
+    {
+      "name": "6::978307200::c0ee3723e0ad6d3dbeb04289e088f6ea89a1512f::0",
+      "group": 6,
+      "doi": "c0ee3723e0ad6d3dbeb04289e088f6ea89a1512f",
+      "publication_date": 978307200,
+      "path_index": 6,
+      "authors": "[{'name': 'L C Harlan', 'ids': ['4203049']}, {'name': 'A Potosky', 'ids': ['6697307']}, {'name': 'F D Gilliland', 'ids': ['4841955']}, {'name': 'R Hoffman', 'ids': ['1949648']}, {'name': 'P C Albertsen', 'ids': ['9516041']}, {'name': 'A S Hamilton', 'ids': ['2999306']}, {'name': 'J W Eley', 'ids': ['4088074']}, {'name': 'J L Stanford', 'ids': ['3122459']}, {'name': 'R A Stephenson', 'ids': ['6729001']}]",
+      "is_original_author": "false",
+      "title": "Factors associated with initial therapy for clinically localized prostate cancer: prostate cancer outcomes study.",
+      "index": 6
+    },
+    {
+      "name": "4::1009843200::3be6ccbc2e725cddedd36a45557a5dd78daf7d4b::1",
+      "group": 4,
+      "doi": "3be6ccbc2e725cddedd36a45557a5dd78daf7d4b",
+      "publication_date": 1009843200,
+      "path_index": 4,
+      "authors": "[{'name': 'Maxwell V Meng', 'ids': ['31882487']}, {'name': 'Gary D Grossfeld', 'ids': ['5824352']}, {'name': 'Natalia Sadetsky', 'ids': ['6886121']}, {'name': 'Shilpa S Mehta', 'ids': ['4221037']}, {'name': 'Deborah P Lubeck', 'ids': ['2654811']}, {'name': 'Peter R Carroll', 'ids': ['1812633']}]",
+      "is_original_author": "true",
+      "title": "Contemporary patterns of androgen deprivation therapy use for newly diagnosed prostate cancer.",
+      "index": 7
+    },
+    {
+      "name": "7::1009843200::5cb7cdc4784d390ba3d102c0cbe864de712c262d::0",
+      "group": 7,
+      "doi": "5cb7cdc4784d390ba3d102c0cbe864de712c262d",
+      "publication_date": 1009843200,
+      "path_index": 7,
+      "authors": "[{'name': 'IRVIN D. FLEMING', 'ids': ['3820457']}, {'name': 'Irvin D. Fleming', 'ids': ['3820457']}, {'name': 'Charles M. Balch', 'ids': ['35162998']}]",
+      "is_original_author": "false",
+      "title": "AJCC Cancer Staging Manual",
+      "index": 8
+    },
+    {
+      "name": "5::1041379200::7d35c7145568c5a621e41ce94e6958903fd2bd08::1",
+      "group": 5,
+      "doi": "7d35c7145568c5a621e41ce94e6958903fd2bd08",
+      "publication_date": 1041379200,
+      "path_index": 5,
+      "authors": "[{'name': 'Matthew R Cooperberg', 'ids': ['3353440']}, {'name': 'Gary D Grossfeld', 'ids': ['5824352']}, {'name': 'Deborah P Lubeck', 'ids': ['2654811']}, {'name': 'Peter R Carroll', 'ids': ['1812633']}]",
+      "is_original_author": "true",
+      "title": "National practice patterns and time trends in androgen ablation for localized prostate cancer.",
+      "index": 9
+    },
+    {
+      "name": "2::1072915200::fd2d2948831a8995679a781903d4f8e2038cce89::1",
+      "group": 2,
+      "doi": "fd2d2948831a8995679a781903d4f8e2038cce89",
+      "publication_date": 1072915200,
+      "path_index": 2,
+      "authors": "[{'name': 'Matthew R Cooperberg', 'ids': ['3353440']}, {'name': 'Deborah P Lubeck', 'ids': ['2654811']}, {'name': 'Maxwell V Meng', 'ids': ['31882487']}, {'name': 'Shilpa S Mehta', 'ids': ['4221037']}, {'name': 'Peter R Carroll', 'ids': ['1812633']}]",
+      "is_original_author": "true",
+      "title": "The changing face of low-risk prostate cancer: trends in clinical presentation and primary management.",
+      "index": 10
+    },
+    {
+      "name": "1::1104537600::e2dd59400d00756b42a56bc5a6c09d40558720a2::1",
+      "group": 1,
+      "doi": "e2dd59400d00756b42a56bc5a6c09d40558720a2",
+      "publication_date": 1104537600,
+      "path_index": 1,
+      "authors": "[{'name': 'Maxwell V Meng', 'ids': ['31882487']}, {'name': 'Eric P Elkin', 'ids': ['4779213']}, {'name': 'David M Latini', 'ids': ['5639765']}, {'name': 'Janeen Duchane', 'ids': ['3501192']}, {'name': 'Peter R Carroll', 'ids': ['1812633']}]",
+      "is_original_author": "true",
+      "title": "Treatment of patients with high risk localized prostate cancer: results from cancer of the prostate strategic urological research endeavor (CaPSURE).",
+      "index": 11
+    },
+    {
+      "name": "2::1104537600::faf5a0517b9c44822a54ce1889c9384da7c00304::0",
+      "group": 2,
+      "doi": "faf5a0517b9c44822a54ce1889c9384da7c00304",
+      "publication_date": 1104537600,
+      "path_index": 2,
+      "authors": "[{'name': 'David C Beyer', 'ids': ['4942377']}, {'name': 'Timothy McKeough', 'ids': ['16327400']}, {'name': 'Theresa Thomas', 'ids': ['38066817']}]",
+      "is_original_author": "false",
+      "title": "Impact of short course hormonal therapy on overall and cancer specific survival after permanent prostate brachytherapy.",
+      "index": 12
+    },
+    {
+      "name": "3::1104537600::512e8a614a48a8c107f3c6ba594e8b4aab9e3ddb::0",
+      "group": 3,
+      "doi": "512e8a614a48a8c107f3c6ba594e8b4aab9e3ddb",
+      "publication_date": 1104537600,
+      "path_index": 3,
+      "authors": "[{'name': 'Vahakn B Shahinian', 'ids': ['5726726']}, {'name': 'Yong-fang Kuo', 'ids': ['6954030']}, {'name': 'Jean L Freeman', 'ids': ['8025236']}, {'name': 'Eduardo Orihuela', 'ids': ['13186640']}, {'name': 'James S Goodwin', 'ids': ['36868328']}]",
+      "is_original_author": "false",
+      "title": "Increasing use of gonadotropin-releasing hormone agonists for the treatment of localized prostate carcinoma.",
+      "index": 13
+    },
+    {
+      "name": "4::1104537600::512e8a614a48a8c107f3c6ba594e8b4aab9e3ddb::0",
+      "group": 4,
+      "doi": "512e8a614a48a8c107f3c6ba594e8b4aab9e3ddb",
+      "publication_date": 1104537600,
+      "path_index": 4,
+      "authors": "[{'name': 'Vahakn B Shahinian', 'ids': ['5726726']}, {'name': 'Yong-fang Kuo', 'ids': ['6954030']}, {'name': 'Jean L Freeman', 'ids': ['8025236']}, {'name': 'Eduardo Orihuela', 'ids': ['13186640']}, {'name': 'James S Goodwin', 'ids': ['36868328']}]",
+      "is_original_author": "false",
+      "title": "Increasing use of gonadotropin-releasing hormone agonists for the treatment of localized prostate carcinoma.",
+      "index": 14
+    },
+    {
+      "name": "5::1104537600::512e8a614a48a8c107f3c6ba594e8b4aab9e3ddb::0",
+      "group": 5,
+      "doi": "512e8a614a48a8c107f3c6ba594e8b4aab9e3ddb",
+      "publication_date": 1104537600,
+      "path_index": 5,
+      "authors": "[{'name': 'Vahakn B Shahinian', 'ids': ['5726726']}, {'name': 'Yong-fang Kuo', 'ids': ['6954030']}, {'name': 'Jean L Freeman', 'ids': ['8025236']}, {'name': 'Eduardo Orihuela', 'ids': ['13186640']}, {'name': 'James S Goodwin', 'ids': ['36868328']}]",
+      "is_original_author": "false",
+      "title": "Increasing use of gonadotropin-releasing hormone agonists for the treatment of localized prostate carcinoma.",
+      "index": 15
+    },
+    {
+      "name": "6::1104537600::512e8a614a48a8c107f3c6ba594e8b4aab9e3ddb::0",
+      "group": 6,
+      "doi": "512e8a614a48a8c107f3c6ba594e8b4aab9e3ddb",
+      "publication_date": 1104537600,
+      "path_index": 6,
+      "authors": "[{'name': 'Vahakn B Shahinian', 'ids': ['5726726']}, {'name': 'Yong-fang Kuo', 'ids': ['6954030']}, {'name': 'Jean L Freeman', 'ids': ['8025236']}, {'name': 'Eduardo Orihuela', 'ids': ['13186640']}, {'name': 'James S Goodwin', 'ids': ['36868328']}]",
+      "is_original_author": "false",
+      "title": "Increasing use of gonadotropin-releasing hormone agonists for the treatment of localized prostate carcinoma.",
+      "index": 16
+    },
+    {
+      "name": "7::1104537600::512e8a614a48a8c107f3c6ba594e8b4aab9e3ddb::0",
+      "group": 7,
+      "doi": "512e8a614a48a8c107f3c6ba594e8b4aab9e3ddb",
+      "publication_date": 1104537600,
+      "path_index": 7,
+      "authors": "[{'name': 'Vahakn B Shahinian', 'ids': ['5726726']}, {'name': 'Yong-fang Kuo', 'ids': ['6954030']}, {'name': 'Jean L Freeman', 'ids': ['8025236']}, {'name': 'Eduardo Orihuela', 'ids': ['13186640']}, {'name': 'James S Goodwin', 'ids': ['36868328']}]",
+      "is_original_author": "false",
+      "title": "Increasing use of gonadotropin-releasing hormone agonists for the treatment of localized prostate carcinoma.",
+      "index": 17
+    },
+    {
+      "name": "0::1167609600::7ba400225356a7d389f04e13e2d2506f40774fc8::1",
+      "group": 0,
+      "doi": "7ba400225356a7d389f04e13e2d2506f40774fc8",
+      "publication_date": 1167609600,
+      "path_index": 0,
+      "authors": "[{'name': 'Henry K Tsai', 'ids': ['32141666']}, {'name': \"Anthony V D'Amico\", 'ids': ['1972938']}, {'name': 'Natalia Sadetsky', 'ids': ['6886121']}, {'name': 'Ming-Hui Chen', 'ids': ['4464141']}, {'name': 'Peter R Carroll', 'ids': ['1812633']}]",
+      "is_original_author": "true",
+      "title": "Androgen deprivation therapy for localized prostate cancer and the risk of cardiovascular mortality.",
+      "index": 18
+    },
+    {
+      "name": "1::1167609600::7ba400225356a7d389f04e13e2d2506f40774fc8::1",
+      "group": 1,
+      "doi": "7ba400225356a7d389f04e13e2d2506f40774fc8",
+      "publication_date": 1167609600,
+      "path_index": 1,
+      "authors": "[{'name': 'Henry K Tsai', 'ids': ['32141666']}, {'name': \"Anthony V D'Amico\", 'ids': ['1972938']}, {'name': 'Natalia Sadetsky', 'ids': ['6886121']}, {'name': 'Ming-Hui Chen', 'ids': ['4464141']}, {'name': 'Peter R Carroll', 'ids': ['1812633']}]",
+      "is_original_author": "true",
+      "title": "Androgen deprivation therapy for localized prostate cancer and the risk of cardiovascular mortality.",
+      "index": 19
+    },
+    {
+      "name": "2::1167609600::7ba400225356a7d389f04e13e2d2506f40774fc8::1",
+      "group": 2,
+      "doi": "7ba400225356a7d389f04e13e2d2506f40774fc8",
+      "publication_date": 1167609600,
+      "path_index": 2,
+      "authors": "[{'name': 'Henry K Tsai', 'ids': ['32141666']}, {'name': \"Anthony V D'Amico\", 'ids': ['1972938']}, {'name': 'Natalia Sadetsky', 'ids': ['6886121']}, {'name': 'Ming-Hui Chen', 'ids': ['4464141']}, {'name': 'Peter R Carroll', 'ids': ['1812633']}]",
+      "is_original_author": "true",
+      "title": "Androgen deprivation therapy for localized prostate cancer and the risk of cardiovascular mortality.",
+      "index": 20
+    },
+    {
+      "name": "3::1167609600::7ba400225356a7d389f04e13e2d2506f40774fc8::1",
+      "group": 3,
+      "doi": "7ba400225356a7d389f04e13e2d2506f40774fc8",
+      "publication_date": 1167609600,
+      "path_index": 3,
+      "authors": "[{'name': 'Henry K Tsai', 'ids': ['32141666']}, {'name': \"Anthony V D'Amico\", 'ids': ['1972938']}, {'name': 'Natalia Sadetsky', 'ids': ['6886121']}, {'name': 'Ming-Hui Chen', 'ids': ['4464141']}, {'name': 'Peter R Carroll', 'ids': ['1812633']}]",
+      "is_original_author": "true",
+      "title": "Androgen deprivation therapy for localized prostate cancer and the risk of cardiovascular mortality.",
+      "index": 21
+    },
+    {
+      "name": "4::1167609600::7ba400225356a7d389f04e13e2d2506f40774fc8::1",
+      "group": 4,
+      "doi": "7ba400225356a7d389f04e13e2d2506f40774fc8",
+      "publication_date": 1167609600,
+      "path_index": 4,
+      "authors": "[{'name': 'Henry K Tsai', 'ids': ['32141666']}, {'name': \"Anthony V D'Amico\", 'ids': ['1972938']}, {'name': 'Natalia Sadetsky', 'ids': ['6886121']}, {'name': 'Ming-Hui Chen', 'ids': ['4464141']}, {'name': 'Peter R Carroll', 'ids': ['1812633']}]",
+      "is_original_author": "true",
+      "title": "Androgen deprivation therapy for localized prostate cancer and the risk of cardiovascular mortality.",
+      "index": 22
+    },
+    {
+      "name": "5::1167609600::7ba400225356a7d389f04e13e2d2506f40774fc8::1",
+      "group": 5,
+      "doi": "7ba400225356a7d389f04e13e2d2506f40774fc8",
+      "publication_date": 1167609600,
+      "path_index": 5,
+      "authors": "[{'name': 'Henry K Tsai', 'ids': ['32141666']}, {'name': \"Anthony V D'Amico\", 'ids': ['1972938']}, {'name': 'Natalia Sadetsky', 'ids': ['6886121']}, {'name': 'Ming-Hui Chen', 'ids': ['4464141']}, {'name': 'Peter R Carroll', 'ids': ['1812633']}]",
+      "is_original_author": "true",
+      "title": "Androgen deprivation therapy for localized prostate cancer and the risk of cardiovascular mortality.",
+      "index": 23
+    },
+    {
+      "name": "6::1167609600::7ba400225356a7d389f04e13e2d2506f40774fc8::1",
+      "group": 6,
+      "doi": "7ba400225356a7d389f04e13e2d2506f40774fc8",
+      "publication_date": 1167609600,
+      "path_index": 6,
+      "authors": "[{'name': 'Henry K Tsai', 'ids': ['32141666']}, {'name': \"Anthony V D'Amico\", 'ids': ['1972938']}, {'name': 'Natalia Sadetsky', 'ids': ['6886121']}, {'name': 'Ming-Hui Chen', 'ids': ['4464141']}, {'name': 'Peter R Carroll', 'ids': ['1812633']}]",
+      "is_original_author": "true",
+      "title": "Androgen deprivation therapy for localized prostate cancer and the risk of cardiovascular mortality.",
+      "index": 24
+    },
+    {
+      "name": "7::1167609600::7ba400225356a7d389f04e13e2d2506f40774fc8::1",
+      "group": 7,
+      "doi": "7ba400225356a7d389f04e13e2d2506f40774fc8",
+      "publication_date": 1167609600,
+      "path_index": 7,
+      "authors": "[{'name': 'Henry K Tsai', 'ids': ['32141666']}, {'name': \"Anthony V D'Amico\", 'ids': ['1972938']}, {'name': 'Natalia Sadetsky', 'ids': ['6886121']}, {'name': 'Ming-Hui Chen', 'ids': ['4464141']}, {'name': 'Peter R Carroll', 'ids': ['1812633']}]",
+      "is_original_author": "true",
+      "title": "Androgen deprivation therapy for localized prostate cancer and the risk of cardiovascular mortality.",
+      "index": 25
+    }
+  ],
+  "links": [
+    {
+      "source": 18,
+      "target": 1,
+      "value": 1,
+      "index": 0
+    },
+    {
+      "source": 19,
+      "target": 11,
+      "value": 1,
+      "index": 1
+    },
+    {
+      "source": 20,
+      "target": 12,
+      "value": 1,
+      "index": 2
+    },
+    {
+      "source": 12,
+      "target": 10,
+      "value": 1,
+      "index": 3
+    },
+    {
+      "source": 21,
+      "target": 13,
+      "value": 1,
+      "index": 4
+    },
+    {
+      "source": 13,
+      "target": 2,
+      "value": 1,
+      "index": 5
+    },
+    {
+      "source": 22,
+      "target": 14,
+      "value": 1,
+      "index": 6
+    },
+    {
+      "source": 14,
+      "target": 7,
+      "value": 1,
+      "index": 7
+    },
+    {
+      "source": 23,
+      "target": 15,
+      "value": 1,
+      "index": 8
+    },
+    {
+      "source": 15,
+      "target": 9,
+      "value": 1,
+      "index": 9
+    },
+    {
+      "source": 24,
+      "target": 16,
+      "value": 1,
+      "index": 10
+    },
+    {
+      "source": 16,
+      "target": 6,
+      "value": 1,
+      "index": 11
+    },
+    {
+      "source": 6,
+      "target": 5,
+      "value": 1,
+      "index": 12
+    },
+    {
+      "source": 5,
+      "target": 4,
+      "value": 1,
+      "index": 13
+    },
+    {
+      "source": 25,
+      "target": 17,
+      "value": 1,
+      "index": 14
+    },
+    {
+      "source": 17,
+      "target": 8,
+      "value": 1,
+      "index": 15
+    },
+    {
+      "source": 8,
+      "target": 3,
+      "value": 1,
+      "index": 16
+    },
+    {
+      "source": 3,
+      "target": 0,
+      "value": 1,
+      "index": 17
+    }
+  ]
+}
+  </script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/drewbuschhorn/DoctorMoon/publication_timeline/static/js/d3/grapher.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/drewbuschhorn/DoctorMoon/publication_timeline/static/js/d3/helpers.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/drewbuschhorn/DoctorMoon/publication_timeline/static/js/d3/templates.js"></script>
+</head>
+<body>
+<style>
+.willnotrender { 
+  transform: translateZ(0); 
+}
+
+#chart {
+  outline: 1px solid black;
+  width: 800px; 
+  height: 600px; 
+  float: left;
+}
+#groups_table {
+  float: left; 
+  border: 1px solid black;
+}
+#groups_table tr {
+  vertical-align: top
+}
+#group_data {
+  max-width: 40em
+}
+.text_group_ids {
+  text-align: center;
+}
+</style>
+<div id="chart"></div>
+
+<div id="host"></div>
+<table id="groups_table">
+  <tr>
+    <td id="groups_column"><div id="groups_column_text"></div></td>
+    <td id="group_data"><div id="group_data_text"></div></td>
+  </tr>
+<table>
+<script>
+    try {
+      timelineData;
+    } catch (err) {
+      alert('No timelineData data found in file:\n ' + filepath + '\n See main.py#L117');
+    }
+// var timelineData is set in data/[timestamp].json file generated by publication_timeline/src/main.py
+var grapher = new Grapher('#chart', 800, 600); 
+grapher.setup(timelineData, new Helpers(), new Templates('#host'));
+</script>
+</body>
+</html>
