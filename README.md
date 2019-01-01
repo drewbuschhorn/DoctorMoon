@@ -13,7 +13,7 @@ This creates a connected cycle of important papers related to the starting paper
 
 ![screenshot2](https://raw.githubusercontent.com/drewbuschhorn/DoctorMoon/gh-pages/Capture.PNG)
 
-Note how paper is 'd' stands out a key paper in the various networks, so a new team member would want to prioritize reading that.
+Note how paper 'd' stands out a key paper in the various networks, so a new team member would want to prioritize reading that. ( https://onlinelibrary.wiley.com/doi/full/10.1002/cncr.20955 )
 
 ### old images from PLoS analysis using a Qt front-end instead of HTML
 ![screenshot3](https://github.com/drewbuschhorn/DoctorMoon/blob/gh-pages/Screenshot.png)
@@ -59,4 +59,5 @@ COMMIT;``` where start_position_byte and start_position_file are the file path a
 
 ### Notes
 1. In a full analysis the 'recursive depth' setting should reset with each new paper from the original authors in a given path to some limit M. But no one is going to use this anyway :-)
-2. The quality of graphs generated is high dependent on being able to pull reference data from articles, so in APIs without a dense dataset of article-reference pairs, the graph will not be super useful. I ran into this issue when using the PLoS API, which (of course) has many references that go to paywalled articles preventing access to the paywalled article's references.
+2. The quality of graphs generated is high dependent on being able to pull reference data from articles, so in APIs without a dense dataset of article-reference pairs, the graph will not be super useful. I ran into this issue when using the PLoS API, which (of course) has many references that go to paywalled articles preventing access to the paywalled article's references.project:
+3. Similar projects: https://www.morganclaypool.com/doi/pdf/10.2200/S00624ED1V01Y201501ICR039 http://www.citnetexplorer.nl/
