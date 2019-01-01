@@ -9,6 +9,17 @@ then processing those papers' in-out references for some N depth, and then pruni
 This creates a connected cycle of important papers related to the starting paper, as shown by in the original authors' citation behavior.
 
 ## Screenshots
+![screenshot1](https://raw.githubusercontent.com/drewbuschhorn/DoctorMoon/gh-pages/Capture2.PNG)
+
+![screenshot2](https://raw.githubusercontent.com/drewbuschhorn/DoctorMoon/gh-pages/Capture.PNG)
+
+Note how paper is 'd' stands out a key paper in the various networks, so a new team member would want to prioritize reading that.
+
+### old images from PLoS analysis using a Qt front-end instead of HTML
+![screenshot3](https://github.com/drewbuschhorn/DoctorMoon/blob/gh-pages/Screenshot.png)
+
+
+
 
 ## Using
 1. Download and extract the S2 Open Research Corpus from Semantic Scholar. 
